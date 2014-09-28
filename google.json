@@ -1,0 +1,15 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sagar, Madhya Pradesh"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [78.74, 23.83]
+      }
+    }
+  ]
+}

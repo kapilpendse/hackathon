@@ -1,0 +1,198 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KAAM CHALU</title>
+    <link rel="stylesheet" href="css/foundation.css" />
+    <link rel="stylesheet" href="css/scooch.css">
+    <link rel="stylesheet" href="css/scooch-style.css">
+    <script src="js/vendor/modernizr.js"></script>
+    <style>
+      /*
+        CSS for google map height to be a % of total display height
+      */
+      body,html{
+          height:100%;
+          width:100%;
+      }
+      .off-canvas-wrap,.inner-wrap{
+          height:100%;   
+      }
+      .main-section {
+          height: 100%;
+      }
+      #map_canvas {
+          height: 60%;
+      }
+      .page{
+          height:100%;   
+      }
+      /* END CSS for google map ... */
+      #dashboard {
+        height: 40%;
+/*        vertical-align: middle;*/
+      }
+      #dashboard-title {}
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+  </head>
+  <body>
+    <div class="page">
+      <div class="off-canvas-wrap" data-offcanvas>
+        <div class="inner-wrap">
+          <nav class="tab-bar">
+            <section class="left-small">
+              <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
+            </section>
+
+            <section class="middle tab-bar-section">
+              <h1 class="title">KAAM CHALU</h1>
+            </section>
+
+  <!--           <section class="right-small">
+              <a class="right-off-canvas-toggle menu-icon" href="#"><span></span></a>
+            </section> -->
+          </nav>
+
+          <aside class="left-off-canvas-menu">
+            <ul class="off-canvas-list">
+              <li><label>Menu</label></li>
+              <li><a href="#">Spot Fixes Near You</a></li>
+            </ul>
+          </aside>
+
+  <!--         <aside class="right-off-canvas-menu">
+            <ul class="off-canvas-list">
+              <li><label>Users</label></li>
+              <li><a href="#">Hari Seldon</a></li>
+              <li><a href="#">...</a></li>
+            </ul>
+          </aside> -->
+
+          <section class="main-section">
+            <!-- The map -->
+            <div id="map_canvas"></div>
+
+            <!-- dashboard (scooch slider) -->
+            <div id="dashboard">
+              <div id="dashboard-title">
+                <h3 class="subheader text-center">Dashboard</h3>
+              </div>
+              <div id="dashboard-content">
+                <div class="m-scooch m-fluid m-scooch-photos">
+                  <!-- the slider -->
+                  <div class="m-scooch-inner">
+                    <!-- the items -->
+                    <div class="m-item m-active">
+                      <h1 class="text-center">One</h1>
+                    </div>
+                    <div class="m-item">
+                      <h1 class="text-center">Two</h1>
+                    </div>
+                    <div class="m-item">
+                      <h1 class="text-center">Three</h1>
+                    </div>
+                  </div>
+                  <!-- the controls -->
+                  <div class="m-scooch-controls m-scooch-bulleted">
+                    <a href="#" data-m-slide="prev">Previous</a>
+                    <a href="#" data-m-slide="next">Next</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        <a class="exit-off-canvas"></a>
+
+        </div>
+      </div>
+    </div>
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/foundation.min.js"></script>
+    <script src="js/scooch.js"></script>
+    <script>
+      //initialize Foundation
+      $(document).foundation();
+
+      //initialize dashboard (scooch slider)
+      $('.m-scooch').scooch();
+
+      //map
+      var map;
+      function loadMap(location) {
+        //default location: sagar, madhya pradesh
+        var latitude = 23.8374857;
+        var longitude = 78.7486267;
+        var zoomLevel = 4;
+        var detectedCurrentLocation = false;
+
+        if(location) {
+          latitude = location.coords.latitude;
+          longitude = location.coords.longitude;
+          zoomLevel = 10;
+          detectedCurrentLocation = true;
+        }
+
+        // Create a simple map.
+        map = new google.maps.Map(document.getElementById('map_canvas'), {
+          zoom: zoomLevel,
+          minZoom: 0,
+          maxZoom: 25,
+          center: {lat: latitude, lng: longitude},
+          zoomControl: true,
+          zoomControlOptions: {
+            style: google.maps.ZoomControlStyle.SMALL,
+            position: google.maps.ControlPosition.TOP_RIGHT
+          },
+          streetViewControl: false,
+          mapTypeControl: false,
+          panControl: false,
+          rotateControl: false,
+          scaleControl: false,
+          overviewMapControl: false
+        });
+
+        // Load a GeoJSON from the same server as our demo.
+        map.data.loadGeoJson('google.json');
+
+        // Set rendering style for data points
+        map.data.setStyle({
+          title: "Spotfix",
+          icon: "img/mapicons/number_1.png"
+        });
+      }
+
+      function onMapLoadError(error) {
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            console.log("User denied the request for Geolocation.");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            console.log("Location information is unavailable.");
+            break;
+          case error.TIMEOUT:
+            console.log("The request to get user location timed out.");
+            break;
+          case error.UNKNOWN_ERROR:
+            console.log("An unknown error occurred.");
+            break;
+        }
+        loadMap();
+      }
+
+      function initialize() {
+        //ask for location permission
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(loadMap, onMapLoadError);
+        } else {
+            loadMap();
+        }
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </body>
+</html>
