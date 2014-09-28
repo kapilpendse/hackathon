@@ -74,6 +74,13 @@
             <!-- The map -->
             <div id="map_canvas"></div>
 
+            <!-- New SF Modal -->
+            <div id="new-sf-modal" class="reveal-modal full" data-reveal>
+              <h2>This is a modal.</h2>
+              <p>Reveal makes these very easy to summon and dismiss. The close button is simply an anchor with a unicode character icon and a class of <code>close-reveal-modal</code>. Clicking anywhere outside the modal will also dismiss it.</p>
+              <a class="close-reveal-modal">&#215;</a>
+            </div>
+
             <!-- dashboard (scooch slider) -->
             <div id="dashboard">
               <div id="dashboard-title">
@@ -112,6 +119,7 @@
     <script src="js/vendor/jquery.js"></script>
     <script src="js/foundation.min.js"></script>
     <script src="js/scooch.js"></script>
+    <script src="js/spotfix_button.js"></script>
     <script>
       //initialize Foundation
       $(document).foundation();
@@ -138,7 +146,7 @@
         // Create a simple map.
         map = new google.maps.Map(document.getElementById('map_canvas'), {
           zoom: zoomLevel,
-          minZoom: 0,
+          minZoom: 4,
           maxZoom: 25,
           center: {lat: latitude, lng: longitude},
           zoomControl: true,
@@ -162,6 +170,9 @@
           title: "Spotfix",
           icon: "img/mapicons/number_1.png"
         });
+
+        //create the SpotFix button
+        initSpotFixButton(map);
       }
 
       function onMapLoadError(error) {
