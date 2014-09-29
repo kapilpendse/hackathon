@@ -33,7 +33,13 @@
         height: 40%;
 /*        vertical-align: middle;*/
       }
-      #dashboard-title {}
+      #dashboard-title {
+      }
+      .empty-column {
+        min-height: 1px;
+/*        content: "\00a0";
+        font-size: 0;*/
+      }
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
   </head>
@@ -76,8 +82,41 @@
 
             <!-- New SF Modal -->
             <div id="new-sf-modal" class="reveal-modal full" data-reveal>
-              <h2>This is a modal.</h2>
-              <p>Reveal makes these very easy to summon and dismiss. The close button is simply an anchor with a unicode character icon and a class of <code>close-reveal-modal</code>. Clicking anywhere outside the modal will also dismiss it.</p>
+              <h2 class="text-center">Plan a new spot fix</h2>
+              <form>
+                <div class="row">
+                  <div class="small-12 medium-12 large-12 columns">
+                    <label>Where
+                      <input type="text" placeholder="Behind Nal Stop bus stand" />
+                    </label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="small-12 medium-12 large-12 columns">
+                    <label>Description
+                      <input type="text" placeholder="Garbage is dumped behind the bus stand" />
+                    </label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="small-6 medium-6 large-6 columns">
+                    <label>Date
+                      <input type="text" placeholder="dd/mm/yyyy" />
+                    </label>
+                  </div>
+                  <div class="small-6 medium-6 large-6 columns">
+                    <label>Time
+                      <input type="text" placeholder="hh:mm" />
+                    </label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="small-3 column empty-column"></div>
+<!--                   <a href="#" class="small-6 column button round" onclick="capturePhoto()">Add photo</a> -->
+                  <input class="small-6 column" type="file" accept="image/*;capture=camera">
+                  <div class="small-3 column empty-column"></div>
+                </div>
+              </form>
               <a class="close-reveal-modal">&#215;</a>
             </div>
 
@@ -92,13 +131,10 @@
                   <div class="m-scooch-inner">
                     <!-- the items -->
                     <div class="m-item m-active">
-                      <h1 class="text-center">One</h1>
+                      <h2 class="text-center">__ spotfixes planned near you</h2>
                     </div>
                     <div class="m-item">
-                      <h1 class="text-center">Two</h1>
-                    </div>
-                    <div class="m-item">
-                      <h1 class="text-center">Three</h1>
+                      <h2 class="text-center">You participated in __ spotfixes</h2>
                     </div>
                   </div>
                   <!-- the controls -->
@@ -120,6 +156,7 @@
     <script src="js/foundation.min.js"></script>
     <script src="js/scooch.js"></script>
     <script src="js/spotfix_button.js"></script>
+    <script src="js/capture_photo.js"></script>
     <script>
       //initialize Foundation
       $(document).foundation();
@@ -129,12 +166,12 @@
 
       //map
       var map;
+      var detectedCurrentLocation = false;
       function loadMap(location) {
         //default location: sagar, madhya pradesh
         var latitude = 23.8374857;
         var longitude = 78.7486267;
         var zoomLevel = 4;
-        var detectedCurrentLocation = false;
 
         if(location) {
           latitude = location.coords.latitude;
@@ -172,7 +209,9 @@
         });
 
         //create the SpotFix button
-        initSpotFixButton(map);
+        if(detectedCurrentLocation) {
+          initSpotFixButton(map);
+        }
       }
 
       function onMapLoadError(error) {
