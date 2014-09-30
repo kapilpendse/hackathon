@@ -57,6 +57,4 @@ function initSpotFixButton(map) {
 
 function newSpotFix() {
   console.log("new spot fix");
-  //Upload photo and get its blob id
-  //Call API to create spotfix
 }

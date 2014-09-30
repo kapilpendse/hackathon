@@ -31,14 +31,11 @@
       /* END CSS for google map ... */
       #dashboard {
         height: 40%;
-/*        vertical-align: middle;*/
       }
       #dashboard-title {
       }
       .empty-column {
         min-height: 1px;
-/*        content: "\00a0";
-        font-size: 0;*/
       }
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
@@ -55,10 +52,6 @@
             <section class="middle tab-bar-section">
               <h1 class="title">KAAM CHALU</h1>
             </section>
-
-  <!--           <section class="right-small">
-              <a class="right-off-canvas-toggle menu-icon" href="#"><span></span></a>
-            </section> -->
           </nav>
 
           <aside class="left-off-canvas-menu">
@@ -68,14 +61,6 @@
             </ul>
           </aside>
 
-  <!--         <aside class="right-off-canvas-menu">
-            <ul class="off-canvas-list">
-              <li><label>Users</label></li>
-              <li><a href="#">Hari Seldon</a></li>
-              <li><a href="#">...</a></li>
-            </ul>
-          </aside> -->
-
           <section class="main-section">
             <!-- The map -->
             <div id="map_canvas"></div>
@@ -83,7 +68,7 @@
             <!-- New SF Modal -->
             <div id="new-sf-modal" class="reveal-modal full" data-reveal>
               <h2 class="text-center">Plan a new spot fix</h2>
-              <form data-abide>
+              <form data-abide id="new-sf-form" enctype="multipart/form-data" action="/api/spotfix/newplan" method="POST">
                 <div class="row">
                   <div class="small-12 medium-12 large-12 columns">
                     <label>Where <small>required</small>
@@ -116,7 +101,6 @@
                 </div>
                 <div class="row">
                   <div class="small-3 column empty-column"></div>
-<!--                   <a href="#" class="small-6 column button round" onclick="capturePhoto()">Add photo</a> -->
                   <input class="small-6 column" id="new-sf-photo" type="file" onchange="photoSelected('#new-sf-photo', '#new-sf-photo-display');" accept="image/*;capture=camera">
                   <div class="small-3 column empty-column"></div>
                 </div>
@@ -127,9 +111,14 @@
                 </div>
                 <div class="row">
                   <div class="small-3 column empty-column"></div>
-                  <a href="#" class="small-6 column button" onclick="newSpotFix()">Submit</a>
+                  <input class="small-6 column button" type="submit" value="Submit">
                   <div class="small-3 column empty-column"></div>
                 </div>
+<!--                 <div class="row">
+                  <div class="small-3 column empty-column"></div>
+                  <a href="#" class="small-6 column button" onclick="newSpotFix()">Submit</a>
+                  <div class="small-3 column empty-column"></div>
+                </div> -->
               </form>
               <a class="close-reveal-modal">&#215;</a>
             </div>
