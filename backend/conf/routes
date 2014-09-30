@@ -2,6 +2,10 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+# Pages
+GET     /                                       Webpages.gatepass
+GET     /spotfix                                Webpages.spotfix
+
 # APIs
 POST    /api/person/signup                      Person.signup
 POST    /api/person/login                       Person.login
@@ -14,7 +18,7 @@ POST    /api/spotfix/report                     SpotFix.report
 GET     /favicon.ico                            404
 
 # Map static resources from the /app/public folder to the /public path
-GET     /                                       staticDir:public
+GET     /public                                 staticDir:public
 
 # Catch all
 #*       /{controller}/{action}                  {controller}.{action}

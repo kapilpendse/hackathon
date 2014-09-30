@@ -12,17 +12,18 @@ public class Interceptor extends Controller {
      */
     @Before(priority = 1,
             unless = {
-                "SpotFix.signup"
+                "SpotFix.signup",
+                "Webpages.gatepass"
             })
     static void validateSession() {
         try {
-            String email = params.get("email");
+            String email = session.get("email");
             if (email == null || email.isEmpty()) {
-                forbidden();
+                redirect("/");
             }
         } catch (Exception e) {
             Logger.warn(e.getMessage());
-            forbidden();
+            redirect("/");
         }
     }
 }

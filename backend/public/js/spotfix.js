@@ -58,3 +58,11 @@ function initSpotFixButton(map) {
 function newSpotFix() {
   console.log("new spot fix");
 }
+
+function signup() {
+  console.log("signup");
+}
+
+function login() {
+  console.log("login");
+}

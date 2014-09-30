@@ -1,0 +1,89 @@
+#{extends 'template.html' /}
+          <section class="main-section">
+            <!-- The map -->
+            <div id="map_canvas"></div>
+
+            <!-- New SF Modal -->
+            <div id="new-sf-modal" class="reveal-modal full" data-reveal>
+              <h2 class="text-center">Plan a new spot fix</h2>
+              <form data-abide id="new-sf-form" enctype="multipart/form-data" action="/api/spotfix/newplan" method="POST">
+                <div class="row">
+                  <div class="small-12 medium-12 large-12 columns">
+                    <label>Where <small>required</small>
+                      <input type="text" required pattern="[a-zA-Z]+" placeholder="Behind Nal Stop bus stand" />
+                    </label>
+                    <small class="error">Where is the spot fix planned?</small>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="small-12 medium-12 large-12 columns">
+                    <label>Description <small>required</small>
+                      <input type="text" required pattern="[a-zA-Z]+" placeholder="Garbage is dumped behind the bus stand" />
+                    </label>
+                    <small class="error">Please describe the spot fix</small>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="small-6 medium-6 large-6 columns">
+                    <label>Date <small>required</small>
+                      <input type="text" required pattern="ddmmyyyy" placeholder="dd/mm/yyyy" />
+                    </label>
+                    <small class="error">Date of spot fix, e.g. 02/10/2014</small>
+                  </div>
+                  <div class="small-6 medium-6 large-6 columns">
+                    <label>Time <small>required</small>
+                      <input type="text" required pattern="hhmm" placeholder="hh:mm" />
+                    </label>
+                    <small class="error">Time of spot fix, e.g. 16:00</small>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="small-3 column empty-column"></div>
+                  <input class="small-6 column" id="new-sf-photo" type="file" onchange="photoSelected('#new-sf-photo', '#new-sf-photo-display');" accept="image/*;capture=camera">
+                  <div class="small-3 column empty-column"></div>
+                </div>
+                <div class="row">
+                  <div class="small-3 column empty-column"></div>
+                  <img class="small-6 column" id="new-sf-photo-display">
+                  <div class="small-3 column empty-column"></div>
+                </div>
+                <div class="row">
+                  <div class="small-3 column empty-column"></div>
+                  <input class="small-6 column button" type="submit" value="Submit">
+                  <div class="small-3 column empty-column"></div>
+                </div>
+<!--                 <div class="row">
+                  <div class="small-3 column empty-column"></div>
+                  <a href="#" class="small-6 column button" onclick="newSpotFix()">Submit</a>
+                  <div class="small-3 column empty-column"></div>
+                </div> -->
+              </form>
+              <a class="close-reveal-modal">&#215;</a>
+            </div>
+
+            <!-- dashboard (scooch slider) -->
+            <div id="dashboard">
+              <div id="dashboard-title">
+                <h3 class="subheader text-center">Dashboard</h3>
+              </div>
+              <div id="dashboard-content">
+                <div class="m-scooch m-fluid m-scooch-photos">
+                  <!-- the slider -->
+                  <div class="m-scooch-inner">
+                    <!-- the items -->
+                    <div class="m-item m-active">
+                      <h2 class="text-center">__ spotfixes planned near you</h2>
+                    </div>
+                    <div class="m-item">
+                      <h2 class="text-center">You participated in __ spotfixes</h2>
+                    </div>
+                  </div>
+                  <!-- the controls -->
+                  <div class="m-scooch-controls m-scooch-bulleted">
+                    <a href="#" data-m-slide="prev">Previous</a>
+                    <a href="#" data-m-slide="next">Next</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>

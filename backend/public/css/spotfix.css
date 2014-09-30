@@ -1,0 +1,38 @@
+/*
+ * CSS for google map height to be a % of total display height
+ */
+body,html{
+  height:100%;
+  width:100%;
+}
+.off-canvas-wrap,.inner-wrap{
+  height:100%;   
+}
+.main-section {
+  height: 100%;
+}
+#map_canvas {
+  height: 60%;
+}
+.page{
+  height:100%;   
+}
+/*
+ * END CSS for google map
+ */
+
+
+/*
+ * CSS for dashboard
+ */
+#dashboard {
+  height: 40%;
+}
+#dashboard-title {
+}
+.empty-column {
+  min-height: 1px;
+}
+/*
+ * END CSS for dashboard
+ */
