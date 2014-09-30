@@ -27,9 +27,9 @@ public class SpotFix extends Model {
     @Indexed(IndexDirection.GEO2D)
     protected double[] loc;
 
-    @Reference("Person")
+    @Reference
     public Person plannedBy;
 
-    @Reference("Person")
+    @Reference
     public List<Person> participants;
 }
