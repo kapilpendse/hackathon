@@ -1,4 +1,16 @@
 
+
+function photoSelected(attachmentElementId, displayElementId) {
+  // console.log(attachmentElementId);
+  // console.log(displayElementId);
+  // var attachment = $(attachmentElementId);
+  // if(attachment.target.files.length == 1 && 
+  //     attachment.target.files[0].type.indexOf("image/") == 0) {
+  //     $(displayElementId).attr("src", URL.createObjectURL(attachment.target.files[0]));
+  // }
+}
+
+
 function SpotFixControl(controlDiv, map) {
   // Set CSS styles for the DIV containing the control
   // Setting padding to 10 px will offset the control
@@ -40,4 +52,11 @@ function initSpotFixButton(map) {
   // implicitly add the control to the DOM, through the Map
   // object. You should not attach the control manually.
   map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
+}
+
+
+function newSpotFix() {
+  console.log("new spot fix");
+  //Upload photo and get its blob id
+  //Call API to create spotfix
 }
