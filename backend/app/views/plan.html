@@ -52,6 +52,36 @@
               <a class="close-reveal-modal">&#215;</a>
             </div>
 
+            <!-- SF Info Modal -->
+            <div id="sf-info-modal" class="reveal-modal full" data-reveal>
+              <h2 class="text-center" id="info-name"></h2>
+              <div class="row">
+                  <p class="small-12 columns empty-column"></p>
+              </div>
+              <div class="row">
+                  <div class="small-4 columns empty-column"></div>
+                  <p id="info-description" class="small-4 columns"></p>
+                  <div class="small-4 columns empty-column"></div>
+              </div>
+              <div class="row">
+                  <div class="small-4 columns empty-column"></div>
+                  <p id="info-date" class="small-4 columns"></p>
+                  <div class="small-4 columns empty-column"></div>
+              </div>
+              <div class="row">
+                  <div class="small-4 columns empty-column"></div>
+                  <p id="info-participants" class="small-4 columns"></p>
+                  <div class="small-4 columns empty-column"></div>
+              </div>
+              <div class="row">
+                  <div class="small-4 columns empty-column"></div>
+                  <a id="sf-join" class="small-4 columns button round">Join</a>
+                  <div class="small-4 columns empty-column"></div>
+              </div>
+              <a class="close-reveal-modal">&#215;</a>
+              </div>
+            </div>
+
             <!-- dashboard (scooch slider) -->
             <div id="dashboard">
               <div id="dashboard-title">
@@ -89,6 +119,27 @@
             //default location: sagar, madhya pradesh
             var latitude = 23.8374857;
             var longitude = 78.7486267;
+            var markerClusterer = new MarkerClusterer();
+            var bounds = new google.maps.LatLngBounds();
+            var boxText = document.createElement("div");
+            boxText.style.cssText = "border: 1px solid black; margin-top: 8px; background: white; padding: 5px;";
+            var infobox = new InfoBox({
+                content: boxText,
+                disableAutoPan: false,
+                maxWidth: 0,
+                pixelOffset: new google.maps.Size(-140, 0),
+                zIndex: null,
+                boxStyle: {
+                    opacity: 0.75,
+                    width: "280px"
+                },
+                closeBoxMargin: "10px 2px 2px 2px",
+                closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
+                infoBoxClearance: new google.maps.Size(1, 1),
+                isHidden: false,
+                pane: "floatPane",
+                enableEventPropagation: false
+            });
 
             //map
             function loadMap(location) {
@@ -120,14 +171,78 @@
                 overviewMapControl: false
               });
 
-              // Load a GeoJSON from the same server as our demo.
+              // Add marker for current location
+              var myLatLng = new google.maps.LatLng(latitude, longitude);
+              var currentMarker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                icon: "/public/img/cursor6.png"
+              });
+
+              markerClusterer.setMap(map);
+              google.maps.event.addListener(map.data, 'addfeature', function (e) {
+                if (e.feature.getGeometry().getType() === 'Point') {
+                  var marker = new google.maps.Marker({
+                    position: e.feature.getGeometry().get(),
+                    title: e.feature.getProperty('name'),
+                    map: map
+                  });
+                  google.maps.event.addListener(marker, 'click', function (marker, e) {
+                    return function () {
+
+                        var name = e.feature.getProperty('name');
+                        var description = e.feature.getProperty('description');
+                        var date = e.feature.getProperty('date');
+//                        var photos = e.feature.getProperty('photos');
+//                        var plannedBy = e.feature.getProperty('plannedby');
+                        var participants = e.feature.getProperty('participants');
+                        $("#info-name").text(name);
+                        $("#info-description").text(description);
+                        $("#info-date").text("Date: " + date);
+                        $("#info-participants").text("Participants: " + participants.length);
+                        $("#sf-info-modal").foundation('reveal', 'open');
+//                        var name = e.feature.getProperty('name');
+//                        var description = e.feature.getProperty('description');
+//                        var date = e.feature.getProperty('date');
+//                        var photos = e.feature.getProperty('photos');
+//                        var plannedBy = e.feature.getProperty('plannedby');
+//                        var participants = e.feature.getProperty('participants');
+//                        $("#info-name").val(name);
+//                        $("#info-description").val(description);
+//                        $("#info-date").val("Date: " + date);
+//                        $("#info-participants").val("Participants: " + participants);
+//                        var readMoreLink = document.createElement('a');
+//                        readMoreLink.setAttribute('href', "#");
+//                        readMoreLink.setAttribute('data-reveal-id', "sf-info-modal");
+//                        readMoreLink.innerHTML = "read more";
+//                        boxText.innerHTML = "<div style='text-align: center;'><h3>" + name + "</h3></div>";
+//                        boxText.appendChild(readMoreLink);
+//                        infobox.setPosition(e.feature.getGeometry().get());
+//                        infobox.setOptions({
+//                            pixelOffset: new google.maps.Size(0, 0)
+//                        });
+//                        infobox.open(map);
+                    };
+                  }(marker, e));
+                  markerClusterer.addMarker(marker);
+                  bounds.extend(e.feature.getGeometry().get());
+                  map.fitBounds(bounds);
+                  map.setCenter(e.feature.getGeometry().get());
+                }
+              });
+
+              // Load all spotfixes
               map.data.loadGeoJson("/api/spotfix/all.json");
 
               // Set rendering style for data points
               map.data.setStyle({
                 title: "Spotfix",
                 icon: "/public/img/black71.png"
-//                icon: "/public/img/mapicons/number_1.png"
+              });
+
+              map.data.setMap(null);
+              google.maps.event.addListener(map, "click", function () {
+                infobox.close();
               });
 
               //create the SpotFix button
