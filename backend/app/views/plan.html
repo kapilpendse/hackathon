@@ -87,3 +87,87 @@
               </div>
             </div>
           </section>
+
+          <script>
+            //initialize dashboard (scooch slider)
+            $('.m-scooch').scooch();
+
+            //map
+            var map;
+            var detectedCurrentLocation = false;
+            function loadMap(location) {
+              //default location: sagar, madhya pradesh
+              var latitude = 23.8374857;
+              var longitude = 78.7486267;
+              var zoomLevel = 4;
+
+              if(location) {
+                latitude = location.coords.latitude;
+                longitude = location.coords.longitude;
+                zoomLevel = 10;
+                detectedCurrentLocation = true;
+              }
+
+              // Create a simple map.
+              map = new google.maps.Map(document.getElementById('map_canvas'), {
+                zoom: zoomLevel,
+                minZoom: 4,
+                maxZoom: 25,
+                center: {lat: latitude, lng: longitude},
+                zoomControl: true,
+                zoomControlOptions: {
+                  style: google.maps.ZoomControlStyle.SMALL,
+                  position: google.maps.ControlPosition.TOP_RIGHT
+                },
+                streetViewControl: false,
+                mapTypeControl: false,
+                panControl: false,
+                rotateControl: false,
+                scaleControl: false,
+                overviewMapControl: false
+              });
+
+              // Load a GeoJSON from the same server as our demo.
+              map.data.loadGeoJson("/public/google.json");
+
+              // Set rendering style for data points
+              map.data.setStyle({
+                title: "Spotfix",
+                icon: "/public/img/mapicons/number_1.png"
+              });
+
+              //create the SpotFix button
+              if(detectedCurrentLocation) {
+                initSpotFixButton(map);
+              }
+            }
+
+            function onMapLoadError(error) {
+              switch(error.code) {
+                case error.PERMISSION_DENIED:
+                  console.log("User denied the request for Geolocation.");
+                  break;
+                case error.POSITION_UNAVAILABLE:
+                  console.log("Location information is unavailable.");
+                  break;
+                case error.TIMEOUT:
+                  console.log("The request to get user location timed out.");
+                  break;
+                case error.UNKNOWN_ERROR:
+                  console.log("An unknown error occurred.");
+                  break;
+              }
+              loadMap();
+            }
+
+            function initialize() {
+              //ask for location permission
+              if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(loadMap, onMapLoadError);
+              } else {
+                  loadMap();
+              }
+            }
+
+            google.maps.event.addDomListener(window, 'load', initialize);
+          </script>
