@@ -11,6 +11,7 @@ POST    /api/spotfix/newplan                    SpotFix.newplan
 POST    /api/spotfix/newphoto                   SpotFix.newphoto
 POST    /api/spotfix/join                       SpotFix.join
 POST    /api/spotfix/report                     SpotFix.report
+GET     /api/spotfix/all.json                   SpotFix.all
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

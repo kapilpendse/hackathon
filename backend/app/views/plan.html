@@ -121,12 +121,13 @@
               });
 
               // Load a GeoJSON from the same server as our demo.
-              map.data.loadGeoJson("/public/google.json");
+              map.data.loadGeoJson("/api/spotfix/all.json");
 
               // Set rendering style for data points
               map.data.setStyle({
                 title: "Spotfix",
-                icon: "/public/img/mapicons/number_1.png"
+                icon: "/public/img/black71.png"
+//                icon: "/public/img/mapicons/number_1.png"
               });
 
               //create the SpotFix button

@@ -1,10 +1,19 @@
 package controllers;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSInputFile;
 import java.io.File;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lib.Util;
@@ -17,6 +26,42 @@ import play.mvc.*;
 @With(Interceptor.class)
 public class SpotFix extends Controller {
 
+    private static class GeoJSONSerializer implements JsonSerializer<models.SpotFix> {
+
+        public JsonElement serialize(models.SpotFix sf, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject feature = new JsonObject();
+            feature.addProperty("type", "Feature");
+
+            JsonObject properties = new JsonObject();
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            properties.addProperty("name", sf.where);
+            properties.addProperty("description", sf.description);
+            properties.addProperty("date", df.format(sf.dateAndTime));
+            JsonArray photos = new JsonArray();
+            for(String p : sf.photos) {
+                photos.add(new JsonPrimitive(p));
+            }
+            properties.add("photos", photos);
+            properties.addProperty("plannedby", sf.plannedBy.name);
+            JsonArray participants = new JsonArray();
+            for(models.Person participant : sf.participants) {
+                participants.add(new JsonPrimitive(participant.name));
+            }
+            properties.add("participants", participants);
+            feature.add("properties", properties);
+            
+            JsonObject geometry = new JsonObject();
+            geometry.addProperty("type", "Point");
+            JsonArray coordinates = new JsonArray();
+            coordinates.add(new JsonPrimitive(sf.loc[0]));
+            coordinates.add(new JsonPrimitive(sf.loc[1]));
+            geometry.add("coordinates", coordinates);
+            feature.add("geometry", geometry);
+
+            return feature;
+        }
+    }
+    
     public static void newphoto(File photo) {
         try {
             //copy tmp file to mongodb gridfs
@@ -102,6 +147,21 @@ public class SpotFix extends Controller {
             Map<String, Object> map = new HashMap<>();
             map.put("result", "ok");
             renderJSON(map);
+        } catch (Exception exp) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("result", "error");
+            map.put("reason", exp.getMessage());
+            renderJSON(map);
+        }
+    }
+    
+    public static void all() {
+        try {
+            List<models.SpotFix> sf = models.SpotFix.findAll();
+            Map<String, Object> map = new HashMap<>();
+            map.put("type", "FeatureCollection");
+            map.put("features", sf);
+            renderJSON(map, new GeoJSONSerializer());
         } catch (Exception exp) {
             Map<String, Object> map = new HashMap<>();
             map.put("result", "error");
