@@ -3,31 +3,50 @@ package controllers;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSInputFile;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import lib.Util;
+import play.Logger;
 import play.data.binding.As;
+import play.libs.MimeTypes;
 import play.mvc.*;
 
 
 @With(Interceptor.class)
 public class SpotFix extends Controller {
 
-    public static void newplan(String where,
-            String description,
-            @As("dd/MM/yyyy HH:mm") Date date,
-            double latitude,
-            double longitude,
-            File photo) {
+    public static void newphoto(File photo) {
         try {
             //copy tmp file to mongodb gridfs
             GridFS gfs = new GridFS(models.SpotFix.db(), models.SpotFix.PHOTOS_GRIDFS_BUCKET);
             GridFSInputFile gfsFile = gfs.createFile(photo);
             gfsFile.setFilename(UUID.randomUUID().toString());
+            gfsFile.setContentType(MimeTypes.getContentType(photo.getName()));
             gfsFile.save();
 
+            Map<String, Object> map = new HashMap<>();
+            map.put("result", "ok");
+            map.put("blobid", gfsFile.getId().toString());
+            renderJSON(map);
+        } catch (Exception exp) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("result", "error");
+            map.put("reason", exp.getMessage());
+            Logger.warn(exp.getMessage());
+            Logger.error(Util.getStackTraceString(exp));
+            renderJSON(map);
+        }
+    }
+
+    public static void newplan(String where,
+            String description,
+            @As("dd/MM/yyyy HH:mm") Date date,
+            double latitude,
+            double longitude,
+            String photoid) {
+        try {
             //create SpotFix object
             //set its properties including gridfs file blob id
             //save the SpotFix object
@@ -35,9 +54,11 @@ public class SpotFix extends Controller {
             sf.where = where;
             sf.description = description;
             sf.dateAndTime = date;
-            sf.photos = new ArrayList<>();
-            sf.photos.add(gfsFile.getId().toString());
-            sf.plannedBy = null;
+            sf.photos.add(photoid);
+            sf.loc[0] = longitude;
+            sf.loc[1] = latitude;
+            sf.plannedBy = Util.getPersonByEmail(session.get("email"));
+            sf.participants.add(sf.plannedBy);
             sf.save();
 
             Map<String, Object> map = new HashMap<>();
@@ -47,6 +68,8 @@ public class SpotFix extends Controller {
             Map<String, Object> map = new HashMap<>();
             map.put("result", "error");
             map.put("reason", exp.getMessage());
+            Logger.warn(exp.getMessage());
+            Logger.error(Util.getStackTraceString(exp));
             renderJSON(map);
         }
     }

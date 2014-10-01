@@ -55,14 +55,115 @@ function initSpotFixButton(map) {
 }
 
 
-function newSpotFix() {
+function newSpotFix(where, description, date, time, latitude, longitude, photoid) {
   console.log("new spot fix");
+  var ddMMyyyy = date.split("/");
+  if(ddMMyyyy.length == 1) {
+      ddMMyyyy = date.split("-");
+  }
+  var dd = ddMMyyyy[0];
+  var MM = ddMMyyyy[1];
+  var yyyy = ddMMyyyy[2];
+  var HHmm = time.split(":");
+  var HH = HHmm[0];
+  var mm = HHmm[1];
+
+  var params = {};
+  params.where = where;
+  params.description = description;
+  params.date = dd + "/" + MM + "/" + yyyy + " " + HH + ":" + mm;
+  params.latitude = latitude;
+  params.longitude = longitude;
+  params.photoid = photoid;
+  $.ajax({
+    url: "/api/spotfix/newplan",
+    type: "POST",
+    data: params,
+    success: function(data, textStatus, jqXHR) {
+      //data - response from server
+      console.log("xhr success");
+      if(data.result == "ok") {
+//          window.location.replace("/")
+        location.reload(true);
+      } else {
+        console.log("signup failed " + data.reason);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log("xhr error");
+    }
+  })
 }
 
-function signup() {
+function signup(name, email, password) {
   console.log("signup");
+  var params = {};
+  params.name = name;
+  params.email = email;
+  params.password = password;
+  $.ajax({
+    url: "/api/person/signup",
+    type: "POST",
+    data: params,
+    success: function(data, textStatus, jqXHR) {
+      //data - response from server
+      console.log("xhr success");
+      if(data.result == "ok") {
+//          window.location.replace("/")
+        location.reload(true);
+      } else {
+        console.log("signup failed " + data.reason);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log("xhr error");
+    }
+  })
 }
 
-function login() {
+function login(email, password) {
   console.log("login");
+  var params = {};
+  params.email = email;
+  params.password = password;
+  $.ajax({
+    url: "/api/person/login",
+    type: "POST",
+    data: params,
+    success: function(data, textStatus, jqXHR) {
+      //data - response from server
+      console.log("xhr success");
+      if(data.result == "ok") {
+//          window.location.replace("/")
+        location.reload(true);
+      } else {
+        console.log("invalid credentials");
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log("xhr error");
+    }
+  })
+}
+
+function logout() {
+  console.log("Logout");
+  var params = {};
+  $.ajax({
+    url: "/api/person/logout",
+    type: "POST",
+    data: params,
+    success: function(data, textStatus, jqXHR) {
+      //data - response from server
+      console.log("xhr success");
+      if(data.result == "ok") {
+        location.reload(true);
+      } else {
+        console.log("logout failed!");
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log("xhr error");
+    }
+  })
 }

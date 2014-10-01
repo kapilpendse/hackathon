@@ -12,6 +12,16 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
     <script src="/public/js/vendor/jquery.js"></script>
     <script src="/public/js/foundation.min.js"></script>
+
+    <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+    <script src="/public/js/vendor/jquery.ui.widget.js"></script>
+    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+    <script src="/public/js/jquery.iframe-transport.js"></script>
+    <!-- The basic File Upload plugin -->
+    <script src="/public/js/jquery.fileupload.js"></script>
+    <!-- The File Upload processing plugin -->
+    <script src="/public/js/jquery.fileupload-process.js"></script>
+
     <script src="/public/js/scooch.js"></script>
     <script src="/public/js/spotfix.js"></script>
   </head>
@@ -32,7 +42,9 @@
           <aside class="left-off-canvas-menu">
             <ul class="off-canvas-list">
               <li><label>Menu</label></li>
-              <li><a href="#">Spot Fixes Near You</a></li>
+              <li><a href="#" id="menu-sf-plan">Spot Fixes Near You</a></li>
+              <li><label>Account</label></li>
+              <li><a href="#" id="menu-acc-logout">Logout</a></li>
             </ul>
           </aside>
 
@@ -53,6 +65,17 @@
           }
         }
       });
+
+      $('#menu-sf-plan')
+        .click(function () {
+          console.log("menu-sf-plan");
+          window.location.href = "/";
+        });
+      $('#menu-acc-logout')
+        .click(function () {
+          console.log("clicked logout");
+          logout();
+        });
     </script>
   </body>
 </html>

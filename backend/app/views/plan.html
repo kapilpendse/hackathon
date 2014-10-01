@@ -6,11 +6,11 @@
             <!-- New SF Modal -->
             <div id="new-sf-modal" class="reveal-modal full" data-reveal>
               <h2 class="text-center">Plan a new spot fix</h2>
-              <form data-abide id="new-sf-form" enctype="multipart/form-data" action="/api/spotfix/newplan" method="POST">
+              <form data-abide id="new-sf-form">
                 <div class="row">
                   <div class="small-12 medium-12 large-12 columns">
                     <label>Where <small>required</small>
-                      <input type="text" required pattern="[a-zA-Z]+" placeholder="Behind Nal Stop bus stand" />
+                      <input id="where" type="text" required pattern="[a-zA-Z]+" placeholder="Behind Nal Stop bus stand" />
                     </label>
                     <small class="error">Where is the spot fix planned?</small>
                   </div>
@@ -18,7 +18,7 @@
                 <div class="row">
                   <div class="small-12 medium-12 large-12 columns">
                     <label>Description <small>required</small>
-                      <input type="text" required pattern="[a-zA-Z]+" placeholder="Garbage is dumped behind the bus stand" />
+                      <input id="description" type="text" required pattern="[a-zA-Z]+" placeholder="Garbage is dumped behind the bus stand" />
                     </label>
                     <small class="error">Please describe the spot fix</small>
                   </div>
@@ -26,37 +26,28 @@
                 <div class="row">
                   <div class="small-6 medium-6 large-6 columns">
                     <label>Date <small>required</small>
-                      <input type="text" required pattern="ddmmyyyy" placeholder="dd/mm/yyyy" />
+                      <input id="ddMMyyyy" type="text" required pattern="ddmmyyyy" placeholder="dd/mm/yyyy" />
                     </label>
                     <small class="error">Date of spot fix, e.g. 02/10/2014</small>
                   </div>
                   <div class="small-6 medium-6 large-6 columns">
                     <label>Time <small>required</small>
-                      <input type="text" required pattern="hhmm" placeholder="hh:mm" />
+                      <input id="HHmm" type="text" required pattern="hhmm" placeholder="hh:mm" />
                     </label>
                     <small class="error">Time of spot fix, e.g. 16:00</small>
                   </div>
                 </div>
                 <div class="row">
                   <div class="small-3 column empty-column"></div>
-                  <input class="small-6 column" id="new-sf-photo" type="file" onchange="photoSelected('#new-sf-photo', '#new-sf-photo-display');" accept="image/*;capture=camera">
+                  <input class="small-6 column" id="photo" name="photo" type="file" accept="image/*;capture=camera">
+                  <input type="hidden" id="new-sf-photo-uploader">
                   <div class="small-3 column empty-column"></div>
                 </div>
                 <div class="row">
                   <div class="small-3 column empty-column"></div>
-                  <img class="small-6 column" id="new-sf-photo-display">
+                  <a href="#" id="new-sf-photo-upload" class="small-6 column button">Submit</a>
                   <div class="small-3 column empty-column"></div>
                 </div>
-                <div class="row">
-                  <div class="small-3 column empty-column"></div>
-                  <input class="small-6 column button" type="submit" value="Submit">
-                  <div class="small-3 column empty-column"></div>
-                </div>
-<!--                 <div class="row">
-                  <div class="small-3 column empty-column"></div>
-                  <a href="#" class="small-6 column button" onclick="newSpotFix()">Submit</a>
-                  <div class="small-3 column empty-column"></div>
-                </div> -->
               </form>
               <a class="close-reveal-modal">&#215;</a>
             </div>
@@ -92,13 +83,15 @@
             //initialize dashboard (scooch slider)
             $('.m-scooch').scooch();
 
-            //map
+            //globals
             var map;
             var detectedCurrentLocation = false;
+            //default location: sagar, madhya pradesh
+            var latitude = 23.8374857;
+            var longitude = 78.7486267;
+
+            //map
             function loadMap(location) {
-              //default location: sagar, madhya pradesh
-              var latitude = 23.8374857;
-              var longitude = 78.7486267;
               var zoomLevel = 4;
 
               if(location) {
@@ -165,8 +158,41 @@
               if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(loadMap, onMapLoadError);
               } else {
-                  loadMap();
+                loadMap();
               }
+
+              $('#new-sf-photo-uploader').fileupload({
+                url: '/api/spotfix/newphoto',
+                sequentialUploads: true,
+                add: function(e, data) {
+                    var jqXHR = data.submit()
+                        .success(function(result, textStatus, jqXHR) {
+//                            console.log(JSON.stringify(result));
+                            newSpotFix(
+                                $("#where").val(),
+                                $("#description").val(),
+                                $("#ddMMyyyy").val(),
+                                $("#HHmm").val(),
+                                latitude,
+                                longitude,
+                                result.blobid
+                            )
+                        })
+                        .error(function (jqXHR, textStatus, errorThrown) {
+                            
+                        });
+                }
+              });
+
+              $("#new-sf-photo-upload").click(function(e) {
+                  console.log("Submit button clicked");
+                  $("#new-sf-photo-uploader").fileupload('add', {
+//                      fileInput: $("#new-sf-photo")
+                      fileInput: $("#photo")
+                  })
+              });
+
+
             }
 
             google.maps.event.addDomListener(window, 'load', initialize);

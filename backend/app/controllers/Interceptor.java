@@ -12,7 +12,8 @@ public class Interceptor extends Controller {
      */
     @Before(priority = 1,
             unless = {
-                "SpotFix.signup",
+                "Person.login",
+                "Person.signup",
                 "Webpages.gatepass"
             })
     static void validateSession() {

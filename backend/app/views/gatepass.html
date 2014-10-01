@@ -8,7 +8,7 @@
                 <div class="row">
                   <div class="small-12 medium-12 large-12 columns">
                     <label>Name <small>required</small>
-                      <input type="text" required pattern="[a-zA-Z]+" placeholder="Sachin Tendulkar" />
+                      <input id="signup-name" type="text" required pattern="[a-zA-Z]+" placeholder="Sachin Tendulkar" />
                     </label>
                     <small class="error">What is your name?</small>
                   </div>
@@ -16,7 +16,7 @@
                 <div class="row">
                   <div class="small-12 medium-12 large-12 columns">
                     <label>Email <small>required</small>
-                      <input type="text" required pattern="email" placeholder="abc@example.com" />
+                      <input id="signup-email" type="text" required pattern="email" placeholder="abc@example.com" />
                     </label>
                     <small class="error">What is your email address?</small>
                   </div>
@@ -24,7 +24,7 @@
                 <div class="row">
                   <div class="small-12 medium-12 large-12 columns">
                     <label>Password <small>required</small>
-                      <input type="password" required pattern="password" placeholder="P@55w0rD" />
+                      <input id="signup-password" type="password" required pattern="password" placeholder="P@55w0rD" />
                     </label>
                     <small class="error">Password must be 8 to 20 alphanumeric characters and the special characters !@#$%.</small>
                   </div>
@@ -58,7 +58,7 @@
                 <div class="row">
                   <div class="small-12 medium-12 large-12 columns">
                     <label>Email <small>required</small>
-                      <input type="text" required pattern="email" placeholder="abc@example.com" />
+                      <input id="login-email" type="text" required pattern="email" placeholder="abc@example.com" />
                     </label>
                     <small class="error">What is your email address?</small>
                   </div>
@@ -66,7 +66,7 @@
                 <div class="row">
                   <div class="small-12 medium-12 large-12 columns">
                     <label>Password <small>required</small>
-                      <input type="password" required pattern="password" placeholder="P@55w0rD" />
+                      <input id="login-password" type="password" required pattern="password" placeholder="P@55w0rD" />
                     </label>
                     <small class="error">Check password</small>
                   </div>
@@ -114,20 +114,25 @@
           <script>
             $('#signup-form')
               .on('invalid', function () {
-                var invalid_fields = $(this).find('[data-invalid]');
-                console.log(invalid_fields);
+//                DEBUG
+//                var invalid_fields = $(this).find('[data-invalid]');
+//                console.log(invalid_fields);
               })
               .on('valid', function () {
-                console.log('valid!');
-                signup();
+                var name = $("#signup-name").val();
+                var email = $("#signup-email").val();
+                var password = $("#signup-password").val();
+                signup(name, email, password);
               });
             $('#login-form')
               .on('invalid', function () {
-                var invalid_fields = $(this).find('[data-invalid]');
-                console.log(invalid_fields);
+//                DEBUG
+//                var invalid_fields = $(this).find('[data-invalid]');
+//                console.log(invalid_fields);
               })
               .on('valid', function () {
-                console.log('valid!');
-                login();
+                var email = $("#login-email").val();
+                var password = $("#login-password").val();
+                login(email, password);
               });
           </script>

@@ -15,4 +15,10 @@ public class Person extends Model {
     public String name;
     public String email;
     public String password;
+    
+    public Person() {
+        name = "";
+        email = "";
+        password = "";
+    }
 }
