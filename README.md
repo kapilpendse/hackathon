@@ -2,6 +2,10 @@ Live Demo
 =========
 Link to [live demo](http://kaamchalu.org)
 
+Kaam Chalu
+==========
+
+[Kaam Chalu](http://kaamchalu.org) is a mobile friendly web app for community spot fixing. Tested on iPhone 4S (Chrome and Safari), iPad (Chrome and Safari) and Motorola Android (Android Browser, Firefox). Also tested on desktop Chrome, Firefox and Safari on Mac OSX Mavericks.
 
 
 The Challenge - Clean India
