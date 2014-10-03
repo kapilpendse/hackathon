@@ -21,6 +21,15 @@ body,html{
  * END CSS for google map
  */
 
+/*
+ * Utility CSS
+ */
+.empty-column {
+  min-height: 1px;
+}
+/*
+ * END Utility CSS
+ */
 
 /*
  * CSS for dashboard
@@ -30,9 +39,19 @@ body,html{
 }
 #dashboard-title {
 }
-.empty-column {
-  min-height: 1px;
-}
 /*
  * END CSS for dashboard
+ */
+
+
+/*
+ * CSS for SpotFix photos carousal
+ */
+#info-photos {
+/*    overflow-x: hidden;
+    position: absolute;*/
+    /*max-height: 90%;*/
+}
+/*
+ * END CSS for SpotFix photos carousal
  */

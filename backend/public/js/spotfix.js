@@ -54,6 +54,27 @@ function initSpotFixButton(map) {
   map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
 }
 
+function initSpotFixPhotoSlider(parentSelector, photos) {
+    $(parentSelector).empty();
+    var baseUrl = "/api/spotfix/getphoto/";
+    var active = document.createElement('div');
+    active.className = "m-item m-active";
+    var activeImg = document.createElement('img');
+    activeImg.setAttribute("src", baseUrl + photos[0]);
+    activeImg.setAttribute("max-width", "100%");
+    active.appendChild(activeImg);
+    $(parentSelector).append(active);
+    for(var i=1; i<photos.length; i++) {
+        var item = document.createElement('div');
+        item.className = "m-item";
+        var itemImg = document.createElement('img');
+        itemImg.setAttribute("src", baseUrl + photos[i]);
+        itemImg.setAttribute("max-width", "100%");
+        item.appendChild(itemImg);
+        $(parentSelector).append(item);
+    }
+    $('#info-photos-slider').scooch();
+}
 
 function newSpotFix(where, description, date, time, latitude, longitude, photoid) {
   console.log("new spot fix");

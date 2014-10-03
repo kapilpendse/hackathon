@@ -7,16 +7,19 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lib.Util;
+import org.bson.types.ObjectId;
 import play.Logger;
 import play.data.binding.As;
 import play.libs.MimeTypes;
@@ -64,17 +67,35 @@ public class SpotFix extends Controller {
     
     public static void newphoto(File photo) {
         try {
-            //copy tmp file to mongodb gridfs
+            //copy tmp file to mongodb gridfs and then delete tmp file
             GridFS gfs = new GridFS(models.SpotFix.db(), models.SpotFix.PHOTOS_GRIDFS_BUCKET);
             GridFSInputFile gfsFile = gfs.createFile(photo);
             gfsFile.setFilename(UUID.randomUUID().toString());
             gfsFile.setContentType(MimeTypes.getContentType(photo.getName()));
             gfsFile.save();
+            photo.delete();
 
             Map<String, Object> map = new HashMap<>();
             map.put("result", "ok");
             map.put("blobid", gfsFile.getId().toString());
             renderJSON(map);
+        } catch (Exception exp) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("result", "error");
+            map.put("reason", exp.getMessage());
+            Logger.warn(exp.getMessage());
+            Logger.error(Util.getStackTraceString(exp));
+            renderJSON(map);
+        }
+    }
+
+    public static void getphoto(String photoid) {
+        try {
+            //extract file from mongodb and render as binary with correct content-type
+            GridFS gfs = new GridFS(models.SpotFix.db(), models.SpotFix.PHOTOS_GRIDFS_BUCKET);
+            GridFSDBFile gfsFile = gfs.find(new ObjectId(photoid));
+            response.setContentTypeIfNotSet(gfsFile.getContentType());
+            renderBinary(gfsFile.getInputStream());
         } catch (Exception exp) {
             Map<String, Object> map = new HashMap<>();
             map.put("result", "error");
@@ -163,10 +184,13 @@ public class SpotFix extends Controller {
             map.put("features", sf);
             renderJSON(map, new GeoJSONSerializer());
         } catch (Exception exp) {
+            Logger.error(exp.getMessage());
+            Logger.error(Util.getStackTraceString(exp));
+            List<models.SpotFix> sf = new ArrayList<>();
             Map<String, Object> map = new HashMap<>();
-            map.put("result", "error");
-            map.put("reason", exp.getMessage());
-            renderJSON(map);
+            map.put("type", "FeatureCollection");
+            map.put("features", sf);
+            renderJSON(map, new GeoJSONSerializer());
         }
     }
 

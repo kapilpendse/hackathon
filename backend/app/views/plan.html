@@ -59,27 +59,43 @@
                   <p class="small-12 columns empty-column"></p>
               </div>
               <div class="row">
-                  <div class="small-4 columns empty-column"></div>
-                  <p id="info-description" class="small-4 columns"></p>
-                  <div class="small-4 columns empty-column"></div>
+                  <div class="small-1 medium-3 large-3 columns empty-column"></div>
+                  <p id="info-description" class="small-10 medium-6 large-6 columns"></p>
+                  <div class="small-1 medium-3 large-3 columns empty-column"></div>
               </div>
               <div class="row">
-                  <div class="small-4 columns empty-column"></div>
-                  <p id="info-date" class="small-4 columns"></p>
-                  <div class="small-4 columns empty-column"></div>
+                  <div class="small-1 medium-3 large-3 columns empty-column"></div>
+                  <p id="info-date" class="small-10 medium-6 large-6 columns"></p>
+                  <div class="small-1 medium-3 large-3 columns empty-column"></div>
               </div>
               <div class="row">
-                  <div class="small-4 columns empty-column"></div>
-                  <p id="info-participants" class="small-4 columns"></p>
-                  <div class="small-4 columns empty-column"></div>
+                  <div class="small-1 medium-3 large-3 columns empty-column"></div>
+                  <p id="info-participants" class="small-10 medium-6 large-6 columns"></p>
+                  <div class="small-1 medium-3 large-3 columns empty-column"></div>
               </div>
               <div class="row">
-                  <div class="small-4 columns empty-column"></div>
-                  <a id="sf-join" class="small-4 columns button round">Join</a>
-                  <div class="small-4 columns empty-column"></div>
+                <div class="small-1 medium-3 large-4 columns empty-column"></div>
+                <div class="small-10 medium-6 large-4 columns empty-column">
+                  <div class="m-scooch m-fluid m-scooch-photos" id="info-photos-slider">
+                    <div class="m-scooch-inner" id="info-photos">
+<!--                        <div class="m-item m-active">
+                            <img src="/api/spotfix/getphoto/542c52250364904594bac423" style="max-width:100%;">
+                        </div>-->
+                    </div>
+                    <div class="m-scooch-controls m-scooch-bulleted">
+                      <a href="#" data-m-slide="prev">Previous</a>
+                      <a href="#" data-m-slide="next">Next</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="small-1 medium-3 large-4 columns empty-column"></div>
+              </div>
+              <div class="row">
+                  <div class="small-4 medium-5 large-5 columns empty-column"></div>
+                  <a id="sf-join" class="small-4 medium-2 large-2 columns button round">Join</a>
+                  <div class="small-4 medium-5 large-5 columns empty-column"></div>
               </div>
               <a class="close-reveal-modal">&#215;</a>
-              </div>
             </div>
 
             <!-- dashboard (scooch slider) -->
@@ -88,7 +104,7 @@
                 <h3 class="subheader text-center">Dashboard</h3>
               </div>
               <div id="dashboard-content">
-                <div class="m-scooch m-fluid m-scooch-photos">
+                <div class="m-scooch m-fluid m-scooch-photos" id="dashboard-slider">
                   <!-- the slider -->
                   <div class="m-scooch-inner">
                     <!-- the items -->
@@ -111,7 +127,9 @@
 
           <script>
             //initialize dashboard (scooch slider)
-            $('.m-scooch').scooch();
+//            $('.m-scooch').scooch();
+//            $('#info-photos-slider').scooch();
+            $('#dashboard-slider').scooch();
 
             //globals
             var map;
@@ -176,8 +194,17 @@
               var currentMarker = new google.maps.Marker({
                 position: myLatLng,
                 map: map,
-                icon: "/public/img/cursor6.png"
+//                icon: "/public/img/cursor6.png"
+//                icon: "/public/img/spyhole.png"
+                icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 8,
+//                  strokeColor: '#2285A2'
+                  strokeColor: '#20B2AA'
+                }
               });
+//              google.maps.event.addListener(marker, 'click', function() {
+//              });
 
               markerClusterer.setMap(map);
               google.maps.event.addListener(map.data, 'addfeature', function (e) {
@@ -193,41 +220,19 @@
                         var name = e.feature.getProperty('name');
                         var description = e.feature.getProperty('description');
                         var date = e.feature.getProperty('date');
-//                        var photos = e.feature.getProperty('photos');
+                        var photos = e.feature.getProperty('photos');
 //                        var plannedBy = e.feature.getProperty('plannedby');
                         var participants = e.feature.getProperty('participants');
                         $("#info-name").text(name);
                         $("#info-description").text(description);
                         $("#info-date").text("Date: " + date);
                         $("#info-participants").text("Participants: " + participants.length);
+                        initSpotFixPhotoSlider("#info-photos", photos);
                         $("#sf-info-modal").foundation('reveal', 'open');
-//                        var name = e.feature.getProperty('name');
-//                        var description = e.feature.getProperty('description');
-//                        var date = e.feature.getProperty('date');
-//                        var photos = e.feature.getProperty('photos');
-//                        var plannedBy = e.feature.getProperty('plannedby');
-//                        var participants = e.feature.getProperty('participants');
-//                        $("#info-name").val(name);
-//                        $("#info-description").val(description);
-//                        $("#info-date").val("Date: " + date);
-//                        $("#info-participants").val("Participants: " + participants);
-//                        var readMoreLink = document.createElement('a');
-//                        readMoreLink.setAttribute('href', "#");
-//                        readMoreLink.setAttribute('data-reveal-id', "sf-info-modal");
-//                        readMoreLink.innerHTML = "read more";
-//                        boxText.innerHTML = "<div style='text-align: center;'><h3>" + name + "</h3></div>";
-//                        boxText.appendChild(readMoreLink);
-//                        infobox.setPosition(e.feature.getGeometry().get());
-//                        infobox.setOptions({
-//                            pixelOffset: new google.maps.Size(0, 0)
-//                        });
-//                        infobox.open(map);
                     };
                   }(marker, e));
                   markerClusterer.addMarker(marker);
                   bounds.extend(e.feature.getGeometry().get());
-//                  map.fitBounds(bounds);
-//                  map.setCenter(e.feature.getGeometry().get());
                 }
               });
 
