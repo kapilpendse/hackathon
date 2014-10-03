@@ -1,4 +1,8 @@
 
+var CONSTANTS = {};
+CONSTANTS.SPECTATOR = "SPECTATOR";
+CONSTANTS.DOER = "DOER";
+CONSTANTS.PLANNER = "PLANNER";
 
 function photoSelected(attachmentElementId, displayElementId) {
   // console.log(attachmentElementId);
@@ -74,6 +78,70 @@ function initSpotFixPhotoSlider(parentSelector, photos) {
         $(parentSelector).append(item);
     }
     $('#info-photos-slider').scooch();
+}
+
+function joinSpotFix(spotfixId) {
+}
+
+function loadSpotFixInfoButtons(role, onDone) {
+    var row = $('<div></div>');
+    row.attr("class", "row");
+    if(role == CONSTANTS.SPECTATOR) {
+        var emptyLeft = $('<div></div>');
+        emptyLeft.attr("class", "small-4 medium-5 large-5 columns empty-column");
+        row.append(emptyLeft);
+        var join = $('<a></a>');//document.createElement('a');
+        join.attr("class", "small-4 medium-2 large-2 columns button round"); //join.className = "small-4 medium-2 large-2 columns button round";
+        join.attr("id", "sf-join"); //join.id = "sf-join";
+        join.html("Join");//join.innerHTML = "Join";
+        join.click(function (event) {
+            console.log("Join");
+        });
+        row.append(join);
+        var emptyRight = $('<div></div>');
+        emptyRight.attr("class", "small-4 medium-5 large-5 columns empty-column");
+        row.append(emptyRight);
+    } else if(role == CONSTANTS.PLANNER) {
+        var emptyLeft = $('<div></div>');
+        emptyLeft.attr("class", "small-1 medium-2 large-2 columns empty-column");
+        row.append(emptyLeft);
+//        var buttonBar = $('<div></div>');
+//        buttonBar.attr("class", "button-bar");
+        var buttonGroup = $('<ul></ul>');
+        buttonGroup.attr("class", "stack-for-small button-group");
+        buttonGroup.append('<li><a href="#" class="small button" id="sf-unjoin">Unjoin</a></li>');
+        buttonGroup.append('<li><a href="#" class="small button" id="sf-mark-complete">Complete</a></li>');
+        buttonGroup.append('<li><a href="#" class="small button" id="sf-edit">Edit</a></li>');
+        buttonGroup.append('<li><a href="#" class="small button" id="sf-checkin">Check In</a></li>');
+        $('#sf-unjoin').click(function (event) {
+            console.log("Unjoin");
+        });
+        $('#sf-mark-complete').click(function (event) {
+            console.log("Mark Complete");
+        });
+        $('#sf-edit').click(function (event) {
+            console.log("Edit");
+        });
+        row.append(buttonGroup);
+        var emptyRight = $('<div></div>');
+        emptyRight.attr("class", "small-1 medium-2 large-2 columns empty-column");
+        row.append(emptyRight);
+    }
+
+    var closeBtn = document.createElement('a');
+    closeBtn.className = "close-reveal-modal";
+    closeBtn.innerHTML = "&#215;";
+    var sfOptions = $("#sf-options");
+    sfOptions.empty();
+    sfOptions.append(row);
+    sfOptions.append(closeBtn);
+    var sfInfoModal = $("#sf-info-modal");
+    sfInfoModal.remove("#sf-options");
+    sfInfoModal.append(sfOptions);
+
+    if(onDone) {
+        onDone();
+    }
 }
 
 function newSpotFix(where, description, date, time, latitude, longitude, photoid) {

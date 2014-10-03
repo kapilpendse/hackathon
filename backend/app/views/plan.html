@@ -74,13 +74,10 @@
                   <div class="small-1 medium-3 large-3 columns empty-column"></div>
               </div>
               <div class="row">
-                <div class="small-1 medium-3 large-4 columns empty-column"></div>
-                <div class="small-10 medium-6 large-4 columns empty-column">
+                <div class="small-2 medium-4 large-4 columns empty-column"></div>
+                <div class="small-8 medium-4 large-4 columns empty-column">
                   <div class="m-scooch m-fluid m-scooch-photos" id="info-photos-slider">
                     <div class="m-scooch-inner" id="info-photos">
-<!--                        <div class="m-item m-active">
-                            <img src="/api/spotfix/getphoto/542c52250364904594bac423" style="max-width:100%;">
-                        </div>-->
                     </div>
                     <div class="m-scooch-controls m-scooch-bulleted">
                       <a href="#" data-m-slide="prev">Previous</a>
@@ -88,14 +85,16 @@
                     </div>
                   </div>
                 </div>
-                <div class="small-1 medium-3 large-4 columns empty-column"></div>
+                <div class="small-2 medium-4 large-4 columns empty-column"></div>
               </div>
-              <div class="row">
+              <div id="sf-options">
+              </div>
+<!--              <div class="row">
                   <div class="small-4 medium-5 large-5 columns empty-column"></div>
                   <a id="sf-join" class="small-4 medium-2 large-2 columns button round">Join</a>
                   <div class="small-4 medium-5 large-5 columns empty-column"></div>
               </div>
-              <a class="close-reveal-modal">&#215;</a>
+              <a class="close-reveal-modal">&#215;</a>-->
             </div>
 
             <!-- dashboard (scooch slider) -->
@@ -127,8 +126,6 @@
 
           <script>
             //initialize dashboard (scooch slider)
-//            $('.m-scooch').scooch();
-//            $('#info-photos-slider').scooch();
             $('#dashboard-slider').scooch();
 
             //globals
@@ -221,14 +218,28 @@
                         var description = e.feature.getProperty('description');
                         var date = e.feature.getProperty('date');
                         var photos = e.feature.getProperty('photos');
-//                        var plannedBy = e.feature.getProperty('plannedby');
+                        var plannedBy = e.feature.getProperty('plannedby');
                         var participants = e.feature.getProperty('participants');
                         $("#info-name").text(name);
                         $("#info-description").text(description);
                         $("#info-date").text("Date: " + date);
                         $("#info-participants").text("Participants: " + participants.length);
                         initSpotFixPhotoSlider("#info-photos", photos);
-                        $("#sf-info-modal").foundation('reveal', 'open');
+                        
+                        var myRole = CONSTANTS.SPECTATOR;
+                        if("${userId}" == plannedBy.id) {
+                            myRole = CONSTANTS.PLANNER;
+                        } else {
+                            for(var i = 0; i < participants.length; i++) {
+                                if("${userId}" == participants[i].id) {
+                                    myRole = CONSTANTS.DOER;
+                                    break;
+                                }
+                            }
+                        }
+                        loadSpotFixInfoButtons(myRole, function() {
+                            $("#sf-info-modal").foundation('reveal', 'open');
+                        });
                     };
                   }(marker, e));
                   markerClusterer.addMarker(marker);

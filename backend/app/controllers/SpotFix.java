@@ -37,6 +37,7 @@ public class SpotFix extends Controller {
 
             JsonObject properties = new JsonObject();
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            properties.addProperty("id", sf.getIdAsStr());
             properties.addProperty("name", sf.where);
             properties.addProperty("description", sf.description);
             properties.addProperty("date", df.format(sf.dateAndTime));
@@ -45,10 +46,16 @@ public class SpotFix extends Controller {
                 photos.add(new JsonPrimitive(p));
             }
             properties.add("photos", photos);
-            properties.addProperty("plannedby", sf.plannedBy.name);
+            JsonObject plannedBy = new JsonObject();
+            plannedBy.addProperty("id", sf.plannedBy.getIdAsStr());
+            plannedBy.addProperty("name", sf.plannedBy.name);
+            properties.add("plannedby", plannedBy);
             JsonArray participants = new JsonArray();
-            for(models.Person participant : sf.participants) {
-                participants.add(new JsonPrimitive(participant.name));
+            for(models.Person p : sf.participants) {
+                JsonObject participant = new JsonObject();
+                participant.addProperty("id", p.getIdAsStr());
+                participant.addProperty("name", p.name);
+                participants.add(participant);
             }
             properties.add("participants", participants);
             feature.add("properties", properties);

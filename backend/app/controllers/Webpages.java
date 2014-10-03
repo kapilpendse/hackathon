@@ -2,6 +2,7 @@ package controllers;
 
 import play.Logger;
 import play.mvc.*;
+import lib.Util;
 
 
 @With(Interceptor.class)
@@ -13,7 +14,9 @@ public class Webpages extends Controller {
             if (email == null || email.isEmpty()) {
                 renderTemplate("gatepass.html");
             } else {
-                renderTemplate("plan.html");
+                models.Person user = Util.getPersonByEmail(email);
+                String userId = user.getIdAsStr();
+                renderTemplate("plan.html", userId);
             }
         } catch (Exception e) {
             Logger.warn(e.getMessage());
