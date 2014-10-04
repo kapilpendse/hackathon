@@ -12,7 +12,7 @@ body,html{
   height: 100%;
 }
 #map_canvas {
-  height: 60%;
+  height: 100%;
 }
 .page{
   height:100%;   
@@ -43,15 +43,12 @@ body,html{
  * END CSS for dashboard
  */
 
-
 /*
- * CSS for SpotFix photos carousal
+ * CSS for SpotFix info modal
  */
-#info-photos {
-/*    overflow-x: hidden;
-    position: absolute;*/
-    /*max-height: 90%;*/
+#sf-info-modal {
+  overflow-y: auto;
 }
 /*
- * END CSS for SpotFix photos carousal
+ * END CSS for SpotFix info modal
  */

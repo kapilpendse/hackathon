@@ -19,7 +19,7 @@ function SpotFixControl(controlDiv, map) {
   // Set CSS styles for the DIV containing the control
   // Setting padding to 10 px will offset the control
   // from the edge of the map.
-  controlDiv.style.padding = '10px';
+  controlDiv.style.padding = '20px';
 
   // Set CSS for + button which launches a reveal modal.
   var controlUI = document.createElement('a');
@@ -107,12 +107,14 @@ function loadSpotFixInfoButtons(role, onDone) {
         row.append(emptyLeft);
 //        var buttonBar = $('<div></div>');
 //        buttonBar.attr("class", "button-bar");
+        var middle = $('<div></div>');
+        middle.attr("class", "small-10 medium-8 large-8 columns");
         var buttonGroup = $('<ul></ul>');
-        buttonGroup.attr("class", "stack-for-small button-group");
-        buttonGroup.append('<li><a href="#" class="small button" id="sf-unjoin">Unjoin</a></li>');
-        buttonGroup.append('<li><a href="#" class="small button" id="sf-mark-complete">Complete</a></li>');
-        buttonGroup.append('<li><a href="#" class="small button" id="sf-edit">Edit</a></li>');
-        buttonGroup.append('<li><a href="#" class="small button" id="sf-checkin">Check In</a></li>');
+        buttonGroup.attr("class", "small-block-grid-1 medium-block-grid-2 large-block-grid-4 even-4");
+        buttonGroup.append('<li><a href="#" class="button round" id="sf-unjoin">Unjoin</a></li>');
+        buttonGroup.append('<li><a href="#" class="button round" id="sf-mark-complete">Complete</a></li>');
+        buttonGroup.append('<li><a href="#" class="button round" id="sf-edit">Edit</a></li>');
+        buttonGroup.append('<li><a href="#" class="button round" id="sf-checkin">Check In</a></li>');
         $('#sf-unjoin').click(function (event) {
             console.log("Unjoin");
         });
@@ -122,7 +124,8 @@ function loadSpotFixInfoButtons(role, onDone) {
         $('#sf-edit').click(function (event) {
             console.log("Edit");
         });
-        row.append(buttonGroup);
+        middle.append(buttonGroup);
+        row.append(middle);
         var emptyRight = $('<div></div>');
         emptyRight.attr("class", "small-1 medium-2 large-2 columns empty-column");
         row.append(emptyRight);
