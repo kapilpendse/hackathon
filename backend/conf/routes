@@ -7,12 +7,14 @@ POST    /api/person/signup                      Person.signup
 POST    /api/person/login                       Person.login
 POST    /api/person/logout                      Person.logout
 
-POST    /api/spotfix/newplan                    SpotFix.newplan
 POST    /api/spotfix/newphoto                   SpotFix.newphoto
 GET     /api/spotfix/getphoto/{photoid}         SpotFix.getphoto
+POST    /api/spotfix/newplan                    SpotFix.newplan
 POST    /api/spotfix/join                       SpotFix.join
-POST    /api/spotfix/report                     SpotFix.report
+POST    /api/spotfix/leave                      SpotFix.leave
+POST    /api/spotfix/cancel                     SpotFix.cancel
 GET     /api/spotfix/all.json                   SpotFix.all
+POST    /api/spotfix/report                     SpotFix.report
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

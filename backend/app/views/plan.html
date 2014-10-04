@@ -237,7 +237,8 @@
                                 }
                             }
                         }
-                        loadSpotFixInfoButtons(myRole, function() {
+                        var spotfixId = e.feature.getProperty('id');
+                        loadSpotFixInfoButtons(spotfixId, myRole, function() {
                             $("#sf-info-modal").foundation('reveal', 'open');
                         });
                     };

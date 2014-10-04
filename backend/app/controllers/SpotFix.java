@@ -147,13 +147,18 @@ public class SpotFix extends Controller {
         }
     }
 
-    public static void join(String where,
-            String description,
-            @As("dd/MM/yyyy HH:mm") Date date,
-            double latitude,
-            double longitude,
-            File photo) {
+    public static void join(String spotfixId) {
         try {
+            //find the SpotFix object and Person object,
+            //then add person as a participant and return success
+            models.SpotFix sf = models.SpotFix.findById(new ObjectId(spotfixId));
+            models.Person person = Util.getPersonByEmail(session.get("email"));
+            if(sf.plannedBy != person &&
+                    sf.participants.contains(person) == false) {
+                sf.participants.add(person);
+                sf.save();
+            }
+
             Map<String, Object> map = new HashMap<>();
             map.put("result", "ok");
             renderJSON(map);
@@ -161,7 +166,81 @@ public class SpotFix extends Controller {
             Map<String, Object> map = new HashMap<>();
             map.put("result", "error");
             map.put("reason", exp.getMessage());
+            Logger.warn(exp.getMessage());
+            Logger.error(Util.getStackTraceString(exp));
             renderJSON(map);
+        }
+    }
+
+    public static void leave(String spotfixId) {
+        try {
+            //find the SpotFix object and Person object,
+            //then remove person as a participant and return success
+            models.SpotFix sf = models.SpotFix.findById(new ObjectId(spotfixId));
+            models.Person person = Util.getPersonByEmail(session.get("email"));
+            if(sf.plannedBy != person &&
+                    sf.participants.contains(person) == true) {
+                sf.participants.remove(person);
+                sf.save();
+            }
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("result", "ok");
+            renderJSON(map);
+        } catch (Exception exp) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("result", "error");
+            map.put("reason", exp.getMessage());
+            Logger.warn(exp.getMessage());
+            Logger.error(Util.getStackTraceString(exp));
+            renderJSON(map);
+        }
+    }
+
+    public static void cancel(String spotfixId) {
+        try {
+            //find the SpotFix object and Person object,
+            //then ensure that the spotfix is planned by the person
+            //then send email alert to all participants and delete the spotfix
+            models.SpotFix sf = models.SpotFix.findById(new ObjectId(spotfixId));
+            models.Person person = Util.getPersonByEmail(session.get("email"));
+            if(sf.plannedBy == person) {
+//                for(models.Person p : sf.participants) {
+//                    new SendCancellationNoticeEmail(p).now();
+//                }
+                sf.delete();
+            } else {
+                throw new Exception("only-planner-can-cancel-spotfix");
+            }
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("result", "ok");
+            renderJSON(map);
+        } catch (Exception exp) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("result", "error");
+            map.put("reason", exp.getMessage());
+            Logger.warn(exp.getMessage());
+            Logger.error(Util.getStackTraceString(exp));
+            renderJSON(map);
+        }
+    }
+
+    public static void all() {
+        try {
+            List<models.SpotFix> sf = models.SpotFix.findAll();
+            Map<String, Object> map = new HashMap<>();
+            map.put("type", "FeatureCollection");
+            map.put("features", sf);
+            renderJSON(map, new GeoJSONSerializer());
+        } catch (Exception exp) {
+            Logger.error(exp.getMessage());
+            Logger.error(Util.getStackTraceString(exp));
+            List<models.SpotFix> sf = new ArrayList<>();
+            Map<String, Object> map = new HashMap<>();
+            map.put("type", "FeatureCollection");
+            map.put("features", sf);
+            renderJSON(map, new GeoJSONSerializer());
         }
     }
 
@@ -183,22 +262,4 @@ public class SpotFix extends Controller {
         }
     }
     
-    public static void all() {
-        try {
-            List<models.SpotFix> sf = models.SpotFix.findAll();
-            Map<String, Object> map = new HashMap<>();
-            map.put("type", "FeatureCollection");
-            map.put("features", sf);
-            renderJSON(map, new GeoJSONSerializer());
-        } catch (Exception exp) {
-            Logger.error(exp.getMessage());
-            Logger.error(Util.getStackTraceString(exp));
-            List<models.SpotFix> sf = new ArrayList<>();
-            Map<String, Object> map = new HashMap<>();
-            map.put("type", "FeatureCollection");
-            map.put("features", sf);
-            renderJSON(map, new GeoJSONSerializer());
-        }
-    }
-
 }

@@ -80,10 +80,8 @@ function initSpotFixPhotoSlider(parentSelector, photos) {
     $('#info-photos-slider').scooch();
 }
 
-function joinSpotFix(spotfixId) {
-}
-
-function loadSpotFixInfoButtons(role, onDone) {
+function loadSpotFixInfoButtons(spotfixId, role, onDone) {
+    console.log("role is " + role);
     var row = $('<div></div>');
     row.attr("class", "row");
     if(role == CONSTANTS.SPECTATOR) {
@@ -96,10 +94,37 @@ function loadSpotFixInfoButtons(role, onDone) {
         join.html("Join");//join.innerHTML = "Join";
         join.click(function (event) {
             console.log("Join");
+            joinSpotFix(spotfixId);
         });
         row.append(join);
         var emptyRight = $('<div></div>');
         emptyRight.attr("class", "small-4 medium-5 large-5 columns empty-column");
+        row.append(emptyRight);
+    } else if(role == CONSTANTS.DOER) {
+        var emptyLeft = $('<div></div>');
+        emptyLeft.attr("class", "small-1 medium-2 large-2 columns empty-column");
+        row.append(emptyLeft);
+//        var buttonBar = $('<div></div>');
+//        buttonBar.attr("class", "button-bar");
+        var middle = $('<div></div>');
+        middle.attr("class", "small-10 medium-8 large-8 columns");
+        var buttonGroup = $('<ul></ul>');
+        buttonGroup.attr("class", "small-block-grid-1 medium-block-grid-2 large-block-grid-4 even-4");
+        buttonGroup.append('<li><a href="#" class="button round" id="sf-unjoin">Unjoin</a></li>');
+        buttonGroup.append('<li><a href="#" class="button round" id="sf-add-photos">Add Photos</a></li>');
+        $('#sf-unjoin').click(function (event) {
+            console.log("Unjoin");
+        });
+        $('#sf-mark-complete').click(function (event) {
+            console.log("Mark Complete");
+        });
+        $('#sf-edit').click(function (event) {
+            console.log("Edit");
+        });
+        middle.append(buttonGroup);
+        row.append(middle);
+        var emptyRight = $('<div></div>');
+        emptyRight.attr("class", "small-1 medium-2 large-2 columns empty-column");
         row.append(emptyRight);
     } else if(role == CONSTANTS.PLANNER) {
         var emptyLeft = $('<div></div>');
@@ -111,10 +136,10 @@ function loadSpotFixInfoButtons(role, onDone) {
         middle.attr("class", "small-10 medium-8 large-8 columns");
         var buttonGroup = $('<ul></ul>');
         buttonGroup.attr("class", "small-block-grid-1 medium-block-grid-2 large-block-grid-4 even-4");
-        buttonGroup.append('<li><a href="#" class="button round" id="sf-unjoin">Unjoin</a></li>');
-        buttonGroup.append('<li><a href="#" class="button round" id="sf-mark-complete">Complete</a></li>');
+        buttonGroup.append('<li><a href="#" class="button round" id="sf-cancel">Cancel</a></li>');
+        buttonGroup.append('<li><a href="#" class="button round" id="sf-add-photos">Add Photos</a></li>');
         buttonGroup.append('<li><a href="#" class="button round" id="sf-edit">Edit</a></li>');
-        buttonGroup.append('<li><a href="#" class="button round" id="sf-checkin">Check In</a></li>');
+        buttonGroup.append('<li><a href="#" class="button round" id="sf-mark-complete">Complete</a></li>');
         $('#sf-unjoin').click(function (event) {
             console.log("Unjoin");
         });
@@ -169,6 +194,29 @@ function newSpotFix(where, description, date, time, latitude, longitude, photoid
   params.photoid = photoid;
   $.ajax({
     url: "/api/spotfix/newplan",
+    type: "POST",
+    data: params,
+    success: function(data, textStatus, jqXHR) {
+      //data - response from server
+      console.log("xhr success");
+      if(data.result == "ok") {
+//          window.location.replace("/")
+        location.reload(true);
+      } else {
+        console.log("signup failed " + data.reason);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log("xhr error");
+    }
+  })
+}
+
+function joinSpotFix(spotfixId) {
+  var params = {};
+  params.spotfixId = spotfixId;
+  $.ajax({
+    url: "/api/spotfix/join",
     type: "POST",
     data: params,
     success: function(data, textStatus, jqXHR) {
