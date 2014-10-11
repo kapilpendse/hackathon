@@ -53,6 +53,12 @@
                   <div class="small-4 medium-5 large-5 columns empty-column"></div>
                 </div>
                 <div class="row">
+                  <div class="small-1 columns empty-column"></div>
+                  <div class="small-10 columns" id="new-sf-form-error">
+                  </div>
+                  <div class="small-1 columns empty-column"></div>
+                </div>
+                <div class="row">
                   <div class="small-3 column empty-column"></div>
                   <a href="#" id="new-sf-photo-upload" class="small-6 column button">Submit</a>
                   <div class="small-3 column empty-column"></div>
@@ -347,10 +353,31 @@
 
               $("#new-sf-photo-upload").click(function(e) {
                   console.log("Submit button clicked");
-                  $("#new-sf-photo-uploader").fileupload('add', {
-//                      fileInput: $("#new-sf-photo")
-                      fileInput: $("#photo")
-                  })
+                  var form = $("#new-sf-form");
+                  var invalidFields = form.find('[data-invalid]');
+                  var where = $('#where').val();
+                  var description = $("#description").val();
+                  var ddMMyyyy = $("#ddMMyyyy").val();
+                  var HHmm = $("#HHmm").val();
+                  if(invalidFields.size() > 0 ||
+                     where == "" ||
+                     description == "" ||
+                     ddMMyyyy == "" ||
+                     HHmm == "") {
+                    var errorContainer = $('#new-sf-form-error');
+                    var errorMsg = $('<div/>');
+                    errorMsg.attr("data-alert", '');
+                    errorMsg.attr("class", "alert-box warning");
+                    errorMsg.text('Please input all details');
+                    var closeBtn = $('<a href="#" class="close">&times;</a>');
+                    closeBtn.appendTo(errorMsg);
+                    errorMsg.appendTo(errorContainer);
+                    $(document).foundation('alert', 'events');
+                  } else {
+                    $("#new-sf-photo-uploader").fileupload('add', {
+                        fileInput: $("#photo")
+                    })
+                  }
               });
 
               $('#sf-add-photo-uploader').fileupload({
