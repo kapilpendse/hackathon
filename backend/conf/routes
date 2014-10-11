@@ -13,6 +13,7 @@ POST    /api/spotfix/newplan                    SpotFix.newplan
 POST    /api/spotfix/join                       SpotFix.join
 POST    /api/spotfix/leave                      SpotFix.leave
 POST    /api/spotfix/cancel                     SpotFix.cancel
+POST    /api/spotfix/addphoto                   SpotFix.addphoto
 GET     /api/spotfix/all.json                   SpotFix.all
 POST    /api/spotfix/report                     SpotFix.report
 

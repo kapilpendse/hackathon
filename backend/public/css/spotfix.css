@@ -52,3 +52,13 @@ body,html{
 /*
  * END CSS for SpotFix info modal
  */
+
+/*
+ * CSS for SpotFix hidden element
+ */
+.sf-hidden {
+    display: none;
+}
+/*
+ * END CSS for SpotFix hidden element
+ */

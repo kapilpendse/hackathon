@@ -84,77 +84,6 @@ function loadSpotFixInfoButtons(spotfixId, role, onDone) {
     console.log("role is " + role);
     var row = $('<div></div>');
     row.attr("class", "row");
-    if(role == CONSTANTS.SPECTATOR) {
-        var emptyLeft = $('<div></div>');
-        emptyLeft.attr("class", "small-4 medium-5 large-5 columns empty-column");
-        row.append(emptyLeft);
-        var join = $('<a></a>');//document.createElement('a');
-        join.attr("class", "small-4 medium-2 large-2 columns button round"); //join.className = "small-4 medium-2 large-2 columns button round";
-        join.attr("id", "sf-join"); //join.id = "sf-join";
-        join.html("Join");//join.innerHTML = "Join";
-        join.click(function (event) {
-            console.log("Join");
-            joinSpotFix(spotfixId);
-        });
-        row.append(join);
-        var emptyRight = $('<div></div>');
-        emptyRight.attr("class", "small-4 medium-5 large-5 columns empty-column");
-        row.append(emptyRight);
-    } else if(role == CONSTANTS.DOER) {
-        var emptyLeft = $('<div></div>');
-        emptyLeft.attr("class", "small-1 medium-2 large-2 columns empty-column");
-        row.append(emptyLeft);
-//        var buttonBar = $('<div></div>');
-//        buttonBar.attr("class", "button-bar");
-        var middle = $('<div></div>');
-        middle.attr("class", "small-10 medium-8 large-8 columns");
-        var buttonGroup = $('<ul></ul>');
-        buttonGroup.attr("class", "small-block-grid-1 medium-block-grid-2 large-block-grid-4 even-4");
-        buttonGroup.append('<li><a href="#" class="button round" id="sf-unjoin">Unjoin</a></li>');
-        buttonGroup.append('<li><a href="#" class="button round" id="sf-add-photos">Add Photos</a></li>');
-        $('#sf-unjoin').click(function (event) {
-            console.log("Unjoin");
-        });
-        $('#sf-mark-complete').click(function (event) {
-            console.log("Mark Complete");
-        });
-        $('#sf-edit').click(function (event) {
-            console.log("Edit");
-        });
-        middle.append(buttonGroup);
-        row.append(middle);
-        var emptyRight = $('<div></div>');
-        emptyRight.attr("class", "small-1 medium-2 large-2 columns empty-column");
-        row.append(emptyRight);
-    } else if(role == CONSTANTS.PLANNER) {
-        var emptyLeft = $('<div></div>');
-        emptyLeft.attr("class", "small-1 medium-2 large-2 columns empty-column");
-        row.append(emptyLeft);
-//        var buttonBar = $('<div></div>');
-//        buttonBar.attr("class", "button-bar");
-        var middle = $('<div></div>');
-        middle.attr("class", "small-10 medium-8 large-8 columns");
-        var buttonGroup = $('<ul></ul>');
-        buttonGroup.attr("class", "small-block-grid-1 medium-block-grid-2 large-block-grid-4 even-4");
-        buttonGroup.append('<li><a href="#" class="button round" id="sf-cancel">Cancel</a></li>');
-        buttonGroup.append('<li><a href="#" class="button round" id="sf-add-photos">Add Photos</a></li>');
-        buttonGroup.append('<li><a href="#" class="button round" id="sf-edit">Edit</a></li>');
-        buttonGroup.append('<li><a href="#" class="button round" id="sf-mark-complete">Complete</a></li>');
-        $('#sf-unjoin').click(function (event) {
-            console.log("Unjoin");
-        });
-        $('#sf-mark-complete').click(function (event) {
-            console.log("Mark Complete");
-        });
-        $('#sf-edit').click(function (event) {
-            console.log("Edit");
-        });
-        middle.append(buttonGroup);
-        row.append(middle);
-        var emptyRight = $('<div></div>');
-        emptyRight.attr("class", "small-1 medium-2 large-2 columns empty-column");
-        row.append(emptyRight);
-    }
 
     var closeBtn = document.createElement('a');
     closeBtn.className = "close-reveal-modal";
@@ -167,6 +96,103 @@ function loadSpotFixInfoButtons(spotfixId, role, onDone) {
     sfInfoModal.remove("#sf-options");
     sfInfoModal.append(sfOptions);
 
+    var emptyLeft = $('<div></div>');
+    emptyLeft.attr("class", "small-2 medium-3 large-3 columns empty-column");
+    var middle = $('<div></div>');
+    middle.attr("class", "small-8 medium-6 large-6 columns");
+    var buttonGroup = $('<ul></ul>');
+    var emptyRight = $('<div></div>');
+    emptyRight.attr("class", "small-2 medium-3 large-3 columns empty-column");
+//    if(role == CONSTANTS.DOER) {
+    if(role == CONSTANTS.SPECTATOR) {
+        row.append(emptyLeft);
+        buttonGroup.attr("class", "small-block-grid-1 medium-block-grid-1 large-block-grid-1");
+        buttonGroup.append('<li><a href="#" class="button" id="sf-join">Join</a></li>');
+        middle.append(buttonGroup);
+        row.append(middle);
+        row.append(emptyRight);
+        $('#sf-join').click(function (event) {
+            console.log("Join");
+            var button = $('#sf-join');
+            button.html("Joining...");
+            button.attr("class", "button disabled");
+            joinSpotFix(spotfixId, function(result) {
+                if(result == "success") {
+                    button.attr("class", "button");
+                    button.html("Joined!");
+                    setTimeout(function() {
+                        location.reload(true);
+                    }, 500);
+                } else {
+                    button.html("Error");
+                    setTimeout(function() {
+                        button.attr("class", "button");
+                        button.html("Join");
+                    }, 500);
+                }
+            });
+        });
+//    } else if(role == CONSTANTS.SPECTATOR) {
+    } else if(role == CONSTANTS.DOER) {
+        row.append(emptyLeft);
+        buttonGroup.attr("class", "small-block-grid-1 medium-block-grid-2 large-block-grid-2");
+        buttonGroup.append('<li><a href="#" class="button" id="sf-leave">Leave</a></li>');
+        buttonGroup.append('<li><a href="#" data-reveal-id="sf-add-photos-modal" class="button" id="sf-add-photos">Add Photos</a></li>');
+        middle.append(buttonGroup);
+        row.append(middle);
+        row.append(emptyRight);
+        $('#sf-add-photos').attr("spotfix-id", spotfixId);
+        $('#sf-leave').click(function (event) {
+            console.log("Leave");
+            var button = $('#sf-leave');
+            button.html("Leaving...");
+            button.attr("class", "button disabled");
+            leaveSpotFix(spotfixId, function(result) {
+                if(result == "success") {
+                    button.attr("class", "button");
+                    button.html("Left.");
+                    setTimeout(function() {
+                        location.reload(true);
+                    }, 500);
+                } else {
+                    button.html("Error");
+                    setTimeout(function() {
+                        button.attr("class", "button");
+                        button.html("Leave");
+                    }, 500);
+                }
+            });
+        });
+
+//    } else if(role == CONSTANTS.DOER) {
+    } else if(role == CONSTANTS.PLANNER) {
+        row.append(emptyLeft);
+        buttonGroup.attr("class", "small-block-grid-1 medium-block-grid-2 large-block-grid-4");
+        buttonGroup.append('<li><a href="#" data-reveal-id="sf-add-photos-modal" class="button" id="sf-add-photos">Add Photos</a></li>');
+        buttonGroup.append('<li><a href="#" class="button" id="sf-edit">Edit</a></li>');
+        buttonGroup.append('<li><a href="#" class="button" id="sf-mark-complete">Complete</a></li>');
+        buttonGroup.append('<li><a href="#" class="button alert" id="sf-cancel">Cancel</a></li>');
+        middle.append(buttonGroup);
+        row.append(middle);
+        row.append(emptyRight);
+        $('#sf-add-photos').attr("spotfix-id", spotfixId);
+        $('#sf-edit').click(function (event) {
+            console.log("Edit");
+        });
+        $('#sf-mark-complete').click(function (event) {
+            console.log("Mark Complete");
+        });
+        $('#sf-cancel').click(function (event) {
+            console.log("Cancel SpotFix");
+        });
+    }
+
+    if(onDone) {
+        onDone();
+    }
+}
+
+function loadSpotFixParticipantsList(participants, onDone) {
     if(onDone) {
         onDone();
     }
@@ -212,7 +238,7 @@ function newSpotFix(where, description, date, time, latitude, longitude, photoid
   })
 }
 
-function joinSpotFix(spotfixId) {
+function joinSpotFix(spotfixId, onDone) {
   var params = {};
   params.spotfixId = spotfixId;
   $.ajax({
@@ -223,14 +249,64 @@ function joinSpotFix(spotfixId) {
       //data - response from server
       console.log("xhr success");
       if(data.result == "ok") {
-//          window.location.replace("/")
-        location.reload(true);
+        onDone("success");
       } else {
         console.log("signup failed " + data.reason);
+        onDone("error");
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log("xhr error");
+      onDone("error");
+    }
+  })
+}
+
+function leaveSpotFix(spotfixId, onDone) {
+  var params = {};
+  params.spotfixId = spotfixId;
+  $.ajax({
+    url: "/api/spotfix/leave",
+    type: "POST",
+    data: params,
+    success: function(data, textStatus, jqXHR) {
+      //data - response from server
+      console.log("xhr success");
+      if(data.result == "ok") {
+        onDone("success");
+      } else {
+        console.log("signup failed " + data.reason);
+        onDone("error");
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log("xhr error");
+      onDone("error");
+    }
+  })
+}
+
+function addPhotoToSpotFix(spotfixId, photoId, onDone) {
+  var params = {};
+  params.spotfixId = spotfixId;
+  params.photoid = photoId;
+  $.ajax({
+    url: "/api/spotfix/addphoto",
+    type: "POST",
+    data: params,
+    success: function(data, textStatus, jqXHR) {
+      //data - response from server
+      console.log("xhr success");
+      if(data.result == "ok") {
+        onDone("success");
+      } else {
+        console.log("signup failed " + data.reason);
+        onDone("error");
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log("xhr error");
+      onDone("error");
     }
   })
 }

@@ -39,7 +39,11 @@
                 </div>
                 <div class="row">
                   <div class="small-3 column empty-column"></div>
-                  <input class="small-6 column" id="photo" name="photo" type="file" accept="image/*;capture=camera">
+                  <span class="small-6 column button fileinput-button">
+                    <span>Take a photo</span>
+                    <input id="photo" name="photo" type="file" accept="image/*;capture=camera">
+                  </span>
+                  <!--<input class="small-6 column button fileinput-button" id="photo" name="photo" type="file" accept="image/*;capture=camera">-->
                   <input type="hidden" id="new-sf-photo-uploader">
                   <div class="small-3 column empty-column"></div>
                 </div>
@@ -89,39 +93,32 @@
               </div>
               <div id="sf-options">
               </div>
-<!--              <div class="row">
-                  <div class="small-4 medium-5 large-5 columns empty-column"></div>
-                  <a id="sf-join" class="small-4 medium-2 large-2 columns button round">Join</a>
-                  <div class="small-4 medium-5 large-5 columns empty-column"></div>
+              <div id="sf-participants">
               </div>
-              <a class="close-reveal-modal">&#215;</a>-->
             </div>
 
-            <!-- dashboard (scooch slider) -->
-<!--            <div id="dashboard">
-              <div id="dashboard-title">
-                <h3 class="subheader text-center">Dashboard</h3>
+            <!-- Add photos to SF modal -->
+            <div id="sf-add-photos-modal" class="reveal-modal full" data-reveal>
+              <h2 class="text-center">Add photos to the spotfix</h2>
+              <div class="row">
+                  <ul class="small-12 medium-8 large-8 small-centered columns button-group even-2">
+                    <li><span class="button fileinput-button">
+                      <span>Take photo</span>
+                      <input id="addphoto" name="photo[]" type="file" accept="image/*;capture=camera">
+                      <input type="hidden" id="sf-add-photo-uploader">
+                    </span></li>
+                    <li><a href="#" class="button" id="btn-upload">
+                      <span id="btn-upload-txt">Upload</span>
+                    </a></li>
+                  </ul>
               </div>
-              <div id="dashboard-content">
-                <div class="m-scooch m-fluid m-scooch-photos" id="dashboard-slider">
-                   the slider 
-                  <div class="m-scooch-inner">
-                     the items 
-                    <div class="m-item m-active">
-                      <h2 class="text-center">__ spotfixes planned near you</h2>
-                    </div>
-                    <div class="m-item">
-                      <h2 class="text-center">You participated in __ spotfixes</h2>
-                    </div>
-                  </div>
-                   the controls 
-                  <div class="m-scooch-controls m-scooch-bulleted">
-                    <a href="#" data-m-slide="prev">Previous</a>
-                    <a href="#" data-m-slide="next">Next</a>
-                  </div>
+              <div class="row">
+                <div class="small-12 medium-8 large-8 small-centered" id="photo-preview">
                 </div>
               </div>
-            </div>-->
+              <a class="close-reveal-modal">&#215;</a>
+            </div>
+
           </section>
 
           <script>
@@ -287,6 +284,9 @@
             }
 
             function initialize() {
+              //upload button should be hidden until a photo is attached
+              $("#btn-upload").hide();
+
               //ask for location permission
               if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(loadMap, onMapLoadError);
@@ -325,6 +325,68 @@
                   })
               });
 
+              $('#sf-add-photo-uploader').fileupload({
+                url: '/api/spotfix/newphoto',
+                sequentialUploads: true,
+                // Enable image resizing, except for Android and Opera,
+                // which actually support image resizing, but fail to
+                // send Blob objects via XHR requests:
+                disableImageResize: /Android(?!.*Chrome)|Opera/
+                    .test(window.navigator.userAgent),
+                previewMaxWidth: 100,
+                previewMaxHeight: 100,
+                previewCrop: true,
+                add: function(e, data) {
+                    $("#btn-upload").attr('disabled', true);
+                    $("#addphoto").attr('disabled', true);
+                    var jqXHR = data.submit()
+                        .success(function(result, textStatus, jqXHR) {
+//                            console.log(JSON.stringify(result));
+                            var spotfixId = $('#sf-add-photos').attr("spotfix-id");
+                            addPhotoToSpotFix(spotfixId, result.blobid, function() {
+                                console.log("Photo added to spotfix");
+                                $("#btn-upload").removeAttr('disabled');
+                                $("#addphoto").removeAttr('disabled');
+                                $("#btn-upload").text("Done!");
+                                setTimeout(function() {
+                                    $("#btn-upload").text("Upload");
+                                    $("#btn-upload").hide();
+                                }, 500);
+                            });
+                        })
+                        .error(function (jqXHR, textStatus, errorThrown) {
+                            console.log(JSON.stringify(errorThrown));
+                            $("#btn-upload").removeAttr('disabled');
+                            $("#addphoto").removeAttr('disabled');
+                        });
+                }
+              });
+
+              $("#addphoto").change(function(e) {
+                console.log("File selection changed");
+                var files = this.files;
+                console.log(JSON.stringify(files));
+                var preview = $("#photo-preview");
+                if(files.length > 0) {
+                    preview.empty();
+                    $("#btn-upload").show();
+                }
+                for(var i = 0; i < files.length; i++) {
+                  loadImage(
+                    files[i],
+                    function (img) {
+                      preview.append(img);
+                    }
+                  );
+                }
+              });
+
+              $("#btn-upload").click(function(e) {
+                  console.log("Upload button clicked");
+                  $("#sf-add-photo-uploader").fileupload('add', {
+                      fileInput: $("#addphoto")
+                  })
+              });
 
             }
 

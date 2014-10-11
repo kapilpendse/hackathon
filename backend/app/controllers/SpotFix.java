@@ -226,6 +226,29 @@ public class SpotFix extends Controller {
         }
     }
 
+    public static void addphoto(String spotfixId,
+            String photoid) {
+        try {
+            //load the SpotFix object
+            //add blob id to list of photos
+            //save the SpotFix object
+            models.SpotFix sf = models.SpotFix.findById(new ObjectId(spotfixId));
+            sf.photos.add(photoid);
+            sf.save();
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("result", "ok");
+            renderJSON(map);
+        } catch (Exception exp) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("result", "error");
+            map.put("reason", exp.getMessage());
+            Logger.warn(exp.getMessage());
+            Logger.error(Util.getStackTraceString(exp));
+            renderJSON(map);
+        }
+    }
+
     public static void all() {
         try {
             List<models.SpotFix> sf = models.SpotFix.findAll();
