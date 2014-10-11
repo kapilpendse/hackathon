@@ -134,13 +134,17 @@ function loadSpotFixInfoButtons(spotfixId, role, onDone) {
         });
 //    } else if(role == CONSTANTS.SPECTATOR) {
     } else if(role == CONSTANTS.DOER) {
-        row.append(emptyLeft);
-        buttonGroup.attr("class", "small-block-grid-1 medium-block-grid-2 large-block-grid-2");
+//        row.append(emptyLeft);
+//        buttonGroup.attr("class", "small-block-grid-1 medium-block-grid-2 large-block-grid-2");
+//        buttonGroup.append('<li><a href="#" class="button" id="sf-leave">Leave</a></li>');
+//        buttonGroup.append('<li><a href="#" data-reveal-id="sf-add-photos-modal" class="button" id="sf-add-photos">Add Photos</a></li>');
+//        middle.append(buttonGroup);
+//        row.append(middle);
+//        row.append(emptyRight);
+        buttonGroup.attr("class", "small-12 medium-8 large-5 small-centered columns button-group even-2");
         buttonGroup.append('<li><a href="#" class="button" id="sf-leave">Leave</a></li>');
         buttonGroup.append('<li><a href="#" data-reveal-id="sf-add-photos-modal" class="button" id="sf-add-photos">Add Photos</a></li>');
-        middle.append(buttonGroup);
-        row.append(middle);
-        row.append(emptyRight);
+        row.append(buttonGroup);
         $('#sf-add-photos').attr("spotfix-id", spotfixId);
         $('#sf-leave').click(function (event) {
             console.log("Leave");
@@ -166,15 +170,21 @@ function loadSpotFixInfoButtons(spotfixId, role, onDone) {
 
 //    } else if(role == CONSTANTS.DOER) {
     } else if(role == CONSTANTS.PLANNER) {
-        row.append(emptyLeft);
-        buttonGroup.attr("class", "small-block-grid-1 medium-block-grid-2 large-block-grid-4");
+//        row.append(emptyLeft);
+//        buttonGroup.attr("class", "small-block-grid-1 medium-block-grid-2 large-block-grid-4");
+//        buttonGroup.append('<li><a href="#" data-reveal-id="sf-add-photos-modal" class="button" id="sf-add-photos">Add Photos</a></li>');
+//        buttonGroup.append('<li><a href="#" class="button" id="sf-edit">Edit</a></li>');
+//        buttonGroup.append('<li><a href="#" class="button" id="sf-mark-complete">Complete</a></li>');
+//        buttonGroup.append('<li><a href="#" class="button alert" id="sf-cancel">Cancel</a></li>');
+//        middle.append(buttonGroup);
+//        row.append(middle);
+//        row.append(emptyRight);
+        buttonGroup.attr("class", "small-12 medium-10 large-8 small-centered columns button-group even-2");
         buttonGroup.append('<li><a href="#" data-reveal-id="sf-add-photos-modal" class="button" id="sf-add-photos">Add Photos</a></li>');
         buttonGroup.append('<li><a href="#" class="button" id="sf-edit">Edit</a></li>');
         buttonGroup.append('<li><a href="#" class="button" id="sf-mark-complete">Complete</a></li>');
         buttonGroup.append('<li><a href="#" class="button alert" id="sf-cancel">Cancel</a></li>');
-        middle.append(buttonGroup);
-        row.append(middle);
-        row.append(emptyRight);
+        row.append(buttonGroup);
         $('#sf-add-photos').attr("spotfix-id", spotfixId);
         $('#sf-edit').click(function (event) {
             console.log("Edit");
