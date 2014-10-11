@@ -62,3 +62,14 @@ body,html{
 /*
  * END CSS for SpotFix hidden element
  */
+
+/*
+ * CSS for SpotFix Join button
+ */
+.sf-join-btn {
+    display: block;
+    margin: 15px auto;
+}
+/*
+ * END CSS for SpotFix Join button
+ */
