@@ -48,6 +48,11 @@
                   <div class="small-3 column empty-column"></div>
                 </div>
                 <div class="row">
+                  <div class="small-4 medium-5 large-5 columns empty-column"></div>
+                  <div class="small-4 medium-2 large-2 columns" id="new-sf-photo-preview"></div>
+                  <div class="small-4 medium-5 large-5 columns empty-column"></div>
+                </div>
+                <div class="row">
                   <div class="small-3 column empty-column"></div>
                   <a href="#" id="new-sf-photo-upload" class="small-6 column button">Submit</a>
                   <div class="small-3 column empty-column"></div>
@@ -285,6 +290,7 @@
 
             function initialize() {
               //upload button should be hidden until a photo is attached
+              $("#new-sf-photo-upload").hide();
               $("#btn-upload").hide();
 
               //ask for location permission
@@ -314,6 +320,28 @@
                         .error(function (jqXHR, textStatus, errorThrown) {
                             
                         });
+                }
+              });
+
+              $("#photo").change(function(e) {
+                console.log("File selection changed");
+                var files = this.files;
+                console.log(JSON.stringify(files));
+                var preview = $("#new-sf-photo-preview");
+                if(files.length > 0) {
+                    preview.empty();
+                    $("#new-sf-photo-upload").show();
+                }
+                for(var i = 0; i < files.length; i++) {
+                  loadImage(
+                    files[i],
+                    function (img) {
+                      preview.append(img);
+                    },
+                    { // Options
+                        maxWidth: 100
+                    }
+                  );
                 }
               });
 
