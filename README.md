@@ -1,6 +1,7 @@
 Live Demo
 =========
-Link to [live demo](http://kaamchalu.org)
+Link to <a href="http://kaamchalu.org" target="_blank">live demo</a>
+
 
 Kaam Chalu
 ==========
